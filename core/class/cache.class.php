@@ -22,17 +22,28 @@ require_once __DIR__ . '/../../core/php/core.inc.php';
 class cache {
 	/*     * *************************Attributs****************************** */
 
-	private static $cache = null;
-
 	private $key;
 	private $value = null;
 	private $lifetime = 0;
-	private $datetime;
+	private $timestamp;
+	private static $_engine = null;
 
 	/*     * ***********************Methode static*************************** */
 
-	public static function getFolder() {
-		return jeedom::getTmpFolder('cache');
+	public static function getEngine(){
+		if(self::$_engine != null){
+			return self::$_engine;
+		}
+		self::$_engine = config::byKey('cache::engine');
+		if(!class_exists(self::$_engine)){
+			config::save('cache::engine','FileCache');
+			self::$_engine = 'FileCache';
+		}
+		if(method_exists(self::$_engine,'isOk') && !self::$_engine::isOk()){
+			config::save('cache::engine','FileCache');
+			self::$_engine = 'FileCache';
+		}
+		return self::$_engine;
 	}
 
 	public static function set($_key, $_value, $_lifetime = 0) {
@@ -51,73 +62,16 @@ class cache {
 	}
 
 	/**
-	 * @name getCache()
-	 * @access public
-	 * @static
-	 * @param string $_engine to override the current cache defined in configuration
-	 * @return \Doctrine\Common\Cache\CacheProvider
-	 */
-	public static function getCache($_engine = null) {
-		if ($_engine === null && self::$cache !== null) {
-			return self::$cache;
-		}
-		if( $_engine === null){
-			// get current cache
-			$engine = config::byKey('cache::engine');
-		}else{
-			// override existing configuration
-			$engine = $_engine;
-			config::save('cache::engine', $_engine);
-		}
-		switch ($engine) {
-			case 'PhpFileCache':
-				self::$cache = new \Doctrine\Common\Cache\FilesystemCache(self::getFolder());
-				break;
-			case 'MemcachedCache':
-				// check if memcached extention is available
-				if (!class_exists('memcached')) {
-					log::add( __CLASS__, 'error', 'memcached extension not installed, fall back to FilesystemCache.');
-					return self::getCache( 'FilesystemCache');
-				}
-				$memcached = new Memcached();
-				$memcached->addServer(config::byKey('cache::memcacheaddr'), config::byKey('cache::memcacheport'));
-				self::$cache = new \Doctrine\Common\Cache\MemcachedCache();
-				self::$cache->setMemcached($memcached);
-				break;
-			default: // default is FilesystemCache
-				self::$cache = new \Doctrine\Common\Cache\FilesystemCache(self::getFolder());
-				break;
-		}
-		return self::$cache;
-	}
-
-	/**
 	 *
 	 * @param string $_key
-	 * @return object
+	 * @return cache
 	 */
 	public static function byKey($_key) {
-		$engine = config::byKey('cache::engine');
-		if(in_array($engine,array('MariadbCache','FileCache','RedisCache'))){
-			$cache = $engine::fetch($_key);
-			if (!is_object($cache)) {
-				return (new self())
-					->setKey($_key)
-					->setDatetime(date('Y-m-d H:i:s'));
-			}
-			return $cache;
-		}
-		// Try/catch/debug to address issue https://github.com/jeedom/core/issues/2426
-		try {
-			$cache = self::getCache()->fetch($_key);
-		} catch (Error $e) {
-			log::add(__CLASS__, 'debug', 'Error in ' . __FUNCTION__ . '(): ' . $e->getMessage() . ', trace: ' . $e->getTraceAsString());
-			$cache = null;
-		}
+		$cache = self::getEngine()::fetch($_key);
 		if (!is_object($cache)) {
-			$cache = (new self())
+			return (new self())
 				->setKey($_key)
-				->setDatetime(date('Y-m-d H:i:s'));
+				->setTimestamp(strtotime('now'));
 		}
 		return $cache;
 	}
@@ -127,170 +81,64 @@ class cache {
 	}
 
 	public static function flush() {
-		$engine = config::byKey('cache::engine');
-		if(in_array($engine,array('MariadbCache','FileCache','RedisCache'))){
-			return $engine::deleteAll();
-		}
-		switch (config::byKey('cache::engine')) {
-			case 'FilesystemCache':
-			case 'PhpFileCache':
-				self::getCache()->deleteAll();
-				shell_exec('rm -rf ' . self::getFolder() . ' 2>&1 > /dev/null');
-				break;
-			default:
-				return;
-		}
-		
+		return self::getEngine()::deleteAll();
 	}
 
 	public static function persist() {
-		switch (config::byKey('cache::engine')) {
-			case 'FileCache':
-			case 'PhpFileCache':
-			case 'FilesystemCache':
-				$cache_dir = self::getFolder();
-				break;
-			default:
-				return;
-		}
-		try {
-			$cmd = system::getCmdSudo() . 'rm -rf ' . __DIR__ . '/../../cache.tar.gz;cd ' . $cache_dir . ';';
-			$cmd .= system::getCmdSudo() . 'tar cfz ' . __DIR__ . '/../../cache.tar.gz * 2>&1 > /dev/null;';
-			$cmd .= system::getCmdSudo() . 'chmod 774 ' . __DIR__ . '/../../cache.tar.gz;';
-			$cmd .= system::getCmdSudo() . 'chown ' . system::get('www-uid') . ':' . system::get('www-gid') . ' ' . __DIR__ . '/../../cache.tar.gz;';
-			$cmd .= system::getCmdSudo() . 'chown -R ' . system::get('www-uid') . ':' . system::get('www-gid') . ' ' . $cache_dir . ';';
-			$cmd .= system::getCmdSudo() . 'chmod 774 -R ' . $cache_dir . ' 2>&1 > /dev/null';
-			com_shell::execute($cmd);
-		} catch (Exception $e) {
+		if(method_exists(self::getEngine(),'persist')){
+			self::getEngine()::persist();
 		}
 	}
 
 	public static function isPersistOk(): bool {
-		if(!in_array(config::byKey('cache::engine'),array('FilesystemCache','PhpFileCache','FileCache'))){
-			return true;
-		}
-		$filename = __DIR__ . '/../../cache.tar.gz';
-		if (!file_exists($filename)) {
-			return false;
-		}
-		if (filemtime($filename) < strtotime('-65min')) {
-			return false;
+		if(method_exists(self::getEngine(),'isPersistOk')){
+			return self::getEngine()::isPersistOk();
 		}
 		return true;
 	}
 
 	public static function restore() {
-		switch (config::byKey('cache::engine')) {
-			case 'FileCache':
-			case 'FilesystemCache':
-			case 'PhpFileCache':
-				$cache_dir = self::getFolder();
-				break;
-			default:
-				return;
+		if(method_exists(self::getEngine(),'restore')){
+			self::getEngine()::restore();
 		}
-		if (!file_exists(__DIR__ . '/../../cache.tar.gz')) {
-			$cmd = 'mkdir ' . $cache_dir . ';';
-			$cmd .= 'chmod -R 777 ' . $cache_dir . ';';
-			com_shell::execute($cmd);
-			return;
-		}
-		$cmd = 'rm -rf ' . $cache_dir . ';';
-		$cmd .= 'mkdir ' . $cache_dir . ';';
-		$cmd .= 'cd ' . $cache_dir . ';';
-		$cmd .= 'tar xfz ' . __DIR__ . '/../../cache.tar.gz;';
-		$cmd .= 'chmod -R 777 ' . $cache_dir . ' 2>&1 > /dev/null;';
-		com_shell::execute($cmd);
 	}
 
 	public static function clean() {
-		$engine = config::byKey('cache::engine');
-		if(in_array($engine,array('MariadbCache','FileCache'))){
-			$engine::clean();
+		if(method_exists(self::getEngine(),'clean')){
+			self::getEngine()::clean();
 		}
-		if(in_array($engine,array('MariadbCache','FileCache','RedisCache'))){
-			$caches = $engine::all();
-			foreach ($caches as $cache) {
-				$matches = null;
-				preg_match_all('/camera(\d*)(.*?)/',  $cache->getKey(), $matches);
-				if (isset($matches[1][0])) {
-					if (!is_numeric($matches[1][0])) {
-						continue;
-					}
-					$object = eqLogic::byId($matches[1][0]);
-					if (!is_object($object)) {
-						cache::delete($cache->getKey());
-					}
-				}
-				if (strpos($cache->getKey(), 'cmd') !== false) {
-					$id = str_replace('cmd', '', $cache->getKey());
-					if (is_numeric($id)) {
-						cache::delete($cache->getKey());
-					}
-					continue;
-				}
-				preg_match_all('/dependancy(.*)/', $cache->getKey(), $matches);
-				if (isset($matches[1][0])) {
-					try {
-						$plugin = plugin::byId($matches[1][0]);
-						if (!is_object($plugin)) {
-							cache::delete($cache->getKey());
-						}
-					} catch (Exception $e) {
-						cache::delete($cache->getKey());
-					}
-				}
+		$caches = self::getEngine()::all();
+		foreach ($caches as $cache) {
+			if(!is_object($cache)){
+				continue;
 			}
-		}
-
-		if (config::byKey('cache::engine') != 'FilesystemCache') {
-			return;
-		}
-		$re = '/s:\d*:(.*?);s:\d*:"(.*?)";s/';
-		$result = array();
-		foreach (ls(self::getFolder()) as $folder) {
-			foreach (ls(self::getFolder() . '/' . $folder) as $file) {
-				$path = self::getFolder() . '/' . $folder . '/' . $file;
-				if (strpos($file, 'swap') !== false) {
-					unlink($path);
-					continue;
-				}
-				$str = (string) str_replace("\n", '', file_get_contents($path));
-				preg_match_all($re, $str, $matches);
-				if (!isset($matches[2]) || !isset($matches[2][0]) || trim($matches[2][0]) == '') {
-					continue;
-				}
-				$result[] = $matches[2][0];
-			}
-		}
-		foreach ($result as $key) {
 			$matches = null;
-			preg_match_all('/camera(\d*)(.*?)/', $key, $matches);
+			preg_match_all('/camera(\d*)(.*?)/',  $cache->getKey(), $matches);
 			if (isset($matches[1][0])) {
 				if (!is_numeric($matches[1][0])) {
 					continue;
 				}
 				$object = eqLogic::byId($matches[1][0]);
 				if (!is_object($object)) {
-					cache::delete($key);
+					cache::delete($cache->getKey());
 				}
 			}
-			if (strpos($key, 'cmd') !== false) {
-				$id = str_replace('cmd', '', $key);
+			if (strpos($cache->getKey(), 'cmd') !== false) {
+				$id = str_replace('cmd', '', $cache->getKey());
 				if (is_numeric($id)) {
-					cache::delete($key);
+					cache::delete($cache->getKey());
 				}
 				continue;
 			}
-			preg_match_all('/dependancy(.*)/', $key, $matches);
+			preg_match_all('/dependancy(.*)/', $cache->getKey(), $matches);
 			if (isset($matches[1][0])) {
 				try {
 					$plugin = plugin::byId($matches[1][0]);
 					if (!is_object($plugin)) {
-						cache::delete($key);
+						cache::delete($cache->getKey());
 					}
 				} catch (Exception $e) {
-					cache::delete($key);
+					cache::delete($cache->getKey());
 				}
 			}
 		}
@@ -300,26 +148,11 @@ class cache {
 
 	public function save() {
 		$this->setTimestamp(strtotime('now'));
-		$engine = config::byKey('cache::engine');
-		if(in_array($engine,array('MariadbCache','FileCache','RedisCache'))){
-			return $engine::save($this);
-		}
-		if ($this->getLifetime() == 0) {
-			return self::getCache()->save($this->getKey(), $this);
-		} else {
-			return self::getCache()->save($this->getKey(), $this, $this->getLifetime());
-		}
+		return self::getEngine()::save($this);
 	}
 
 	public function remove() {
-		$engine = config::byKey('cache::engine');
-		if(in_array($engine,array('MariadbCache','FileCache','RedisCache'))){
-			return $engine::delete($this->getKey());
-		}
-		try {
-			self::getCache()->delete($this->getKey());
-		} catch (Exception $e) {
-		}
+		return self::getEngine()::delete($this->getKey());
 	}
 
 	/*     * **********************Getteur Setteur*************************** */
@@ -328,8 +161,8 @@ class cache {
 		return $this->key;
 	}
 
-	public function setKey($key): self {
-		$this->key = $key;
+	public function setKey($_key): self {
+		$this->key = $_key;
 		return $this;
 	}
 
@@ -337,8 +170,8 @@ class cache {
 		return ($this->value === null || (is_string($this->value) && trim($this->value) === '')) ? $_default : $this->value;
 	}
 
-	public function setValue($value): self {
-		$this->value = $value;
+	public function setValue($_value): self {
+		$this->value = $_value;
 		return $this;
 	}
 
@@ -346,29 +179,29 @@ class cache {
 		return $this->lifetime;
 	}
 
-	public function setLifetime($lifetime): self {
-		if ($lifetime < 0) {
-			$lifetime = 0;
+	public function setLifetime($_lifetime): self {
+		if ($_lifetime < 0) {
+			$_lifetime = 0;
 		}
-		$this->lifetime = intval($lifetime);
+		$this->lifetime = intval($_lifetime);
 		return $this;
 	}
 
 	public function getDatetime() {
-		return date('Y-m-d H:i:s',$this->datetime);
+		return date('Y-m-d H:i:s',(int) $this->timestamp);
 	}
 
-	public function setDatetime($datetime): self {
-		$this->datetime = strtotime($datetime);
+	public function setDatetime($_datetime): self {
+		$this->timestamp = strtotime($_datetime);
 		return $this;
 	}
 
 	public function getTimestamp(){
-		return $this->datetime;
+		return $this->timestamp;
 	}
 
 	public function setTimestamp($_timestamp){
-		$this->datetime = $_timestamp;
+		$this->timestamp = $_timestamp;
 		return $this;
 	}
 }
@@ -377,7 +210,7 @@ class cache {
 class MariadbCache {
 
 	public static function all(){
-		$sql = 'SELECT `key`,`datetime`,`value`,`lifetime`
+		$sql = 'SELECT `key`,`timestamp`,`value`,`lifetime`
 		FROM cache';
 		$results =  DB::Prepare($sql,array(), DB::FETCH_TYPE_ALL, PDO::FETCH_CLASS,'cache');
 		foreach ($results as $cache) {
@@ -389,12 +222,13 @@ class MariadbCache {
 	public static function clean(){
 		$sql = 'DELETE 
 		FROM cache
-		WHERE (UNIX_TIMESTAMP(`datetime`)+`lifetime`) < UNIX_TIMESTAMP()';
+		WHERE `lifetime` > 0
+			AND (`timestamp`+`lifetime`) < UNIX_TIMESTAMP()';
 		return  DB::Prepare($sql,array(), DB::FETCH_TYPE_ROW, PDO::FETCH_CLASS);
 	}
 
 	public static function fetch($_key){
-		$sql = 'SELECT `key`,`datetime`,`value`,`lifetime`
+		$sql = 'SELECT `key`,`timestamp`,`value`,`lifetime`
 		FROM cache
 		WHERE `key`=:key';
 		$cache = DB::Prepare($sql,array('key' => $_key), DB::FETCH_TYPE_ROW, PDO::FETCH_CLASS,'cache');
@@ -424,9 +258,9 @@ class MariadbCache {
 			'key' => $_cache->getKey(),
 			'value' => serialize($_cache->getValue()),
 			'lifetime' =>$_cache->getLifetime(),
-			'datetime' => $_cache->getTimestamp()
+			'timestamp' => $_cache->getTimestamp()
 		);
-		$sql = 'REPLACE INTO cache SET `key`=:key, `value`=:value,`datetime`=:datetime,`lifetime`=:lifetime';
+		$sql = 'REPLACE INTO cache SET `key`=:key, `value`=:value,`timestamp`=:timestamp,`lifetime`=:lifetime';
 		return  DB::Prepare($sql,$value, DB::FETCH_TYPE_ROW);
 	}
 
@@ -435,6 +269,10 @@ class MariadbCache {
 class RedisCache {
 
 	private static $connection = null;
+
+	public static function isOk(){
+		return class_exists('redis');
+	}
 
 	public static function getConnection(){
 		if(static::$connection !== null){
@@ -460,7 +298,7 @@ class RedisCache {
 		if($data === false){
 			return null;
 		}
-		return unserialize($data);
+		return @unserialize($data);
 	}
 
 	public static function delete($_key){
@@ -527,4 +365,46 @@ class FileCache {
 	public static function save($_cache){
 		file_put_contents(jeedom::getTmpFolder('cache').'/'.base64_encode($_cache->getKey()),serialize($_cache));
 	}
+
+	public static function persist() {
+		$cache_dir = jeedom::getTmpFolder('cache');
+		try {
+			$cmd = system::getCmdSudo() . 'rm -rf ' . __DIR__ . '/../../cache.tar.gz;cd ' . $cache_dir . ';';
+			$cmd .= system::getCmdSudo() . 'tar cfz ' . __DIR__ . '/../../cache.tar.gz * 2>&1 > /dev/null;';
+			$cmd .= system::getCmdSudo() . 'chmod 774 ' . __DIR__ . '/../../cache.tar.gz;';
+			$cmd .= system::getCmdSudo() . 'chown ' . system::get('www-uid') . ':' . system::get('www-gid') . ' ' . __DIR__ . '/../../cache.tar.gz;';
+			$cmd .= system::getCmdSudo() . 'chown -R ' . system::get('www-uid') . ':' . system::get('www-gid') . ' ' . $cache_dir . ';';
+			$cmd .= system::getCmdSudo() . 'chmod 774 -R ' . $cache_dir . ' 2>&1 > /dev/null';
+			com_shell::execute($cmd);
+		} catch (Exception $e) {
+		}
+	}
+
+	public static function isPersistOk(): bool {
+		$filename = __DIR__ . '/../../cache.tar.gz';
+		if (!file_exists($filename)) {
+			return false;
+		}
+		if (filemtime($filename) < strtotime('-65min')) {
+			return false;
+		}
+		return true;
+	}
+
+	public static function restore() {
+		$cache_dir = jeedom::getTmpFolder('cache');
+		if (!file_exists(__DIR__ . '/../../cache.tar.gz')) {
+			$cmd = 'mkdir ' . $cache_dir . ';';
+			$cmd .= 'chmod -R 777 ' . $cache_dir . ';';
+			com_shell::execute($cmd);
+			return;
+		}
+		$cmd = 'rm -rf ' . $cache_dir . ';';
+		$cmd .= 'mkdir ' . $cache_dir . ';';
+		$cmd .= 'cd ' . $cache_dir . ';';
+		$cmd .= 'tar xfz ' . __DIR__ . '/../../cache.tar.gz;';
+		$cmd .= 'chmod -R 777 ' . $cache_dir . ' 2>&1 > /dev/null;';
+		com_shell::execute($cmd);
+	}
+
 }

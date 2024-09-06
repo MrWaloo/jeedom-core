@@ -17,9 +17,6 @@
 */
 
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
-use League\ColorExtractor\Color;
-use League\ColorExtractor\ColorExtractor;
-use League\ColorExtractor\Palette;
 
 function include_file($_folder, $_fn, $_type, $_plugin = '') {
 	if (strpos($_folder, '..') !== false || strpos($_fn, '..') !== false || strpos($_fn, '\\') !== false) {
@@ -958,7 +955,7 @@ function getNtpTime() {
 				$NTPtime = ord($data[0]) * pow(256, 3) + ord($data[1]) * pow(256, 2) + ord($data[2]) * 256 + ord($data[3]);
 				$TimeFrom1990 = $NTPtime - 2840140800;
 				$TimeNow = $TimeFrom1990 + 631152000;
-				return date("m/d/Y H:i:s", $TimeNow + $time_adjustment);
+				return date("m/d/Y H:i:s", (int) ($TimeNow + $time_adjustment));
 			}
 		}
 	}
@@ -1077,6 +1074,16 @@ function isConnect($_right = '') {
 		return ($_SESSION['user']->getProfils() == $_right);
 	}
 	return true;
+}
+
+function hasRight($_name = '',$_right = 'r',$_default = 'r') {
+	if ($_SESSION['user']->getProfils() == 'admin' || $_SESSION['user']->getProfils() == 'user') {
+		return true;
+	}
+	if (strpos($_SESSION['user']->getRights($_name,$_default), $_right) !== false) {
+		return true;
+	}
+	return false;
 }
 
 function ZipErrorMessage($code) {
@@ -1393,8 +1400,9 @@ function listSession() {
 				continue;
 			}
 			$session_id = str_replace('sess_', '', $session);
+			$timestamp = com_shell::execute(system::getCmdSudo() . ' stat -c "%Y" ' . session_save_path() . '/' . $session);
 			$return[$session_id] = array(
-				'datetime' => date('Y-m-d H:i:s', com_shell::execute(system::getCmdSudo() . ' stat -c "%Y" ' . session_save_path() . '/' . $session)),
+				'datetime' => date('Y-m-d H:i:s', (int) $timestamp),
 			);
 			$return[$session_id]['login'] = $data_session['user']->getLogin();
 			$return[$session_id]['user_id'] = $data_session['user']->getId();
@@ -1443,7 +1451,7 @@ function checkAndFixCron($_cron) {
 	return $return;
 }
 
-function cronIsDue($_cron,$_datetime = null){
+function cronIsDue($_cron,$_datetime = null,$_lastlaunch = null){
 	if (((new DateTime('today midnight +1 day'))->format('I') - (new DateTime('today midnight'))->format('I')) == -1 && date('I') == 1 && date('Gi') > 159) {
 		return false;
 	}
@@ -1456,9 +1464,20 @@ function cronIsDue($_cron,$_datetime = null){
 	}
 	try {
 		$c = new Cron\CronExpression(checkAndFixCron($_cron), new Cron\FieldFactory);
-		return $c->isDue($_datetime);
+		if($c->isDue($_datetime)){
+			return true;
+		}
+		if($_lastlaunch !== null){
+			$prev = $c->getPreviousRunDate()->getTimestamp();
+			if (strtotime($_lastlaunch) <= $prev && abs((strtotime('now') - $prev) / 60) <= config::byKey('maxCatchAllow') || config::byKey('maxCatchAllow') == -1) {
+				return true;
+			}
+		}
 	} catch (Exception $e) {
-
+		$evaluate = jeedom::evaluateExpression($_cron);
+		if(is_numeric($evaluate)){
+		  return ($evaluate == date('Gi'));
+		}
 	} catch (Error $e) {
 
 	}
