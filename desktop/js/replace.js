@@ -542,4 +542,3 @@ document.getElementById('eqSource').addEventListener('change', function(event) {
     return
   }
 })
-
