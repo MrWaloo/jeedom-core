@@ -258,9 +258,12 @@ Vous pouvez utiliser n’importe lequel des symboles suivants pour les comparais
 
 Vous pouvez combiner n’importe quelle comparaison avec les opérateurs suivants :
 
-- ``&&`` : et. Il est aussi possible d'utiliser : ``ET`` / ``et`` / ``AND`` / ``and`` mais peut ne pas fonctionner correctement avec certaines fonctions php.
-- ``||`` : ou. Il est aussi possible d'utiliser : ``OU`` / ``ou`` / ``OR`` / ``or`` mais peut ne pas fonctionner correctement avec certaines fonctions php.
-- ``xor``  : ou exclusif. Il est aussi possible d'utiliser : ``XOR`` / ``^`` mais peut ne pas fonctionner correctement avec certaines fonctions php.
+Que vous combiniez des comparaisons sur des équipements différents ou sur le même, il est toujours nécessaire d'indiquer l'équipement.
+``[Salle de bain][Hydrometrie][température] >= 18 && [Salle de bain][Hydrometrie][température] <= 22``
+
+- ``&&`` : et. **Attention**, l'utilisation de  : ``ET`` / ``et`` / ``AND`` / ``and`` n'est pas recommandée, dans certain cas cela peut fonctionner mais avec certaines fonctions php cela ne fonctionnera pas.
+- ``||`` : ou. **Attention**, l'utilisation de  : ``OU`` / ``ou`` / ``OR`` / ``or`` n'est pas recommandée, dans certain cas cela peut fonctionner mais avec certaines fonctions php cela ne fonctionnera pas.
+- ``xor``  : ou exclusif. **Attention**, l'utilisation de  : ``XOR`` / ``^`` n'est pas recommandée, dans certain cas cela peut fonctionner mais avec certaines fonctions php cela ne fonctionnera pas.
 
 ### Les tags
 
@@ -293,8 +296,8 @@ Un tag est remplacé lors de l’exécution du scénario par sa valeur. Vous pou
   - ``schedule`` s'il a été lancé par une programmation,
   - ``user`` s'il a été lancé manuellement,
   - ``start`` pour un lancement au démarrage de Jeedom.
-- ``#trigger_id#`` : Si c'est une commande qui a déclenché le scénario alors ce tag à la valeur de l'id de la commande qui l'a déclenché.
-- ``#trigger_name#`` : Si c'est une commande qui a déclenché le scénario alors ce tag à la valeur du nom de la commande (sous forme [objet][equipement][commande])
+- ``#trigger_id#`` : Si c'est une commande qui a déclenché le scénario alors ce tag à la valeur de l'id de la commande qui l'a déclenché. Exemple : ``#trigger_id# == 19``
+- ``#trigger_name#`` : Si c'est une commande qui a déclenché le scénario alors ce tag à la valeur du nom de la commande (sous forme [objet][equipement][commande]). Exemple : ``#trigger_name# == '[cuisine][lumiere][etat]'``
 - ``#trigger_value#`` : Si c'est une commande qui a déclenché le scénario alors ce tag à la valeur de la commande ayant déclenché le scénario. Astuce si vous voulez la valeur courante de la commande qui a déclencher le scénario (et non sa valeur au déclenchement) vous pouvez utiliser : ``##trigger_id##`` (double #)
 - ``#latitude#`` : Permet de récuperer l'information de latitude mise dans la configuration de jeedom
 - ``#longitude#`` : Permet de récuperer l'information de longitude mise dans la configuration de jeedom

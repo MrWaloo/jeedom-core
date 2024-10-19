@@ -19,24 +19,41 @@
 /* * ***************************Includes********************************* */
 require_once __DIR__ . '/../../core/php/core.inc.php';
 
-class log {
+use Psr\Log\AbstractLogger;
+
+class log extends AbstractLogger {
 	/*     * *************************Constantes****************************** */
 
 	const DEFAULT_MAX_LINE = 200;
 
 	/*     * *************************Attributs****************************** */
 
-	
+	private $_log_name;
+
 	private static $config = null;
- 	private static $level = array(
+	private static $level = array(
 		'debug' => 100,
 		'info'  => 200,
 		'notice' => 250,
 		'warning' => 300,
 		'error' => 400,
 		'critical' => 500,
+		'alert' => 550,
 		'emergency' => 600
 	);
+
+	public function __construct($log_name) {
+		$this->_log_name = $log_name;
+	}
+
+	/*	 * ************Methods to suport Psr\Log\AbstractLogger &  LoggerInterface  ************ */
+	public static function getLogger($_logName) {
+		return new self($_logName);
+	}
+
+	public function log($level, $message, array $context = array()) {
+		log::add($this->_log_name, $level, $message);
+	}
 
 	/*     * ***********************Methode static*************************** */
 
@@ -51,10 +68,13 @@ class log {
 	}
 
 	public static function getLogLevel($_log) {
-		if(strpos($_log,'_') !== false){
-			$_log = explode('_',$_log)[0];
-		}
 		$specific_level = self::getConfig('log::level::' . $_log);
+		if (!is_array($specific_level) && strpos($_log,'_') !== false) {
+			preg_match('/(.*?)\_[a-zA-Z]*?$/m', $_log, $matches);
+			if(isset($matches[1])){
+				$specific_level = self::getConfig('log::level::' . $matches[1]);
+			}
+		}
 		if (is_array($specific_level)) {
 			if (isset($specific_level['default']) && $specific_level['default'] == 1) {
 				return self::getConfig('log::level');
@@ -103,7 +123,7 @@ class log {
             $action = '<a href="/index.php?v=d&p=log&logfile=' . $_log . '">' . __('Log', __FILE__) . ' ' . $_log . '</a>';
 			if ($level == 400 && self::getConfig('addMessageForErrorLog') == 1) {
 				@message::add($_log, $_message, $action, $_logicalId);
-			} elseif ($level >= 500) {
+			} elseif ($level >= 500 && $_log != 'update') {
 				@message::add($_log, $_message, $action, $_logicalId);
 			}
 		} catch (Exception $e) {

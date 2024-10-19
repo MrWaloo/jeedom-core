@@ -12,9 +12,8 @@
 - **DEV** Configurando um sistema de filas para execução de ações [LINK](https://github.com/jeedom/core/issues/2489)
 - Tags de cenário agora são específicas para a instância do cenário (se você tiver dois lançamentos de cenário muito próximos, as tags do último não sobrescreverão mais as do primeiro) [LINK](https://github.com/jeedom/core/issues/2763)
 - Mudança para a parte de gatilho dos cenários : [LINK](https://github.com/jeedom/core/issues/2414)
-  - ``triggerId()`` agora está obsoleto e será removido em futuras atualizações principais
-  - ``trigger()`` agora está obsoleto e será removido em futuras atualizações principais
-  - ``triggerValue()`` agora está obsoleto e será removido em futuras atualizações principais
+  - ``triggerId()`` agora está obsoleto e será removido em futuras atualizações principais. Se você tiver ``triggerId() == 587`` deve ser substituído por ``#trigger_id# == 587``
+  - ``triggerValue()`` agora está obsoleto e será removido em futuras atualizações principais. Se você tiver ``triggerValue() == 10`` deve ser substituído por ``#trigger_value# == 10``
   - ``#trigger#`` : Talvez :
     - ``api`` se o lançamento foi acionado pela API,
     - ``TYPEcmd`` se a inicialização foi acionada por um comando, com TYPE substituído pelo ID do plugin (por exemplo, virtualCmd),
@@ -66,12 +65,21 @@
 - Corrigido um problema com comandos de seleção de tipo em designs [LINK](https://github.com/jeedom/core/issues/2853)
 - Possibilidade de indicar que o equipamento não possui bateria (em caso de má recuperação) [LINK](https://github.com/jeedom/core/issues/2855)
 - Redesenho de escrita em logs, remoção da biblioteca monolog (observe que a opção de enviar logs em syslog não está mais disponível no momento, se a demanda for alta veremos como colocá-la de volta) [LINK](https://github.com/jeedom/core/pull/2805)
-- Mudando do nodejs 18 para o nodejs 20 [LINK](https://github.com/jeedom/core/pull/2846)
 - Melhor gerenciamento dos níveis de log do sublog do plugin [LINK](https://github.com/jeedom/core/issues/2860)
 - Excluir a pasta vendor (usando o compositor da maneira normal) permite reduzir o tamanho do núcleo [LINK](https://github.com/jeedom/core/commit/3aa99c503b6b1903e6a07b346ceb4d03ca3c0c42)
 - Configurações específicas de widget agora podem ser traduzidas [LINK](https://github.com/jeedom/core/pull/2862)
 - Corrigido um bug no Mac em designs ao clicar com o botão direito [LINK](https://github.com/jeedom/core/issues/2863)
 - Melhoria do sistema de lançamento de cenários programados [LINK](https://github.com/jeedom/core/issues/2875)
+- Mensagens de erro de exceção aprimoradas se o nível de log for depurado [LINK](https://github.com/jeedom/core/issues/2886)
+- Na página de substituição possibilidade de solicitar a desativação do equipamento [LINK](https://github.com/jeedom/core/issues/2893)
+- Durante uma atualização, o backup direto agora leva em consideração exclusões de plugins [LINK](https://github.com/jeedom/core/commit/22aa19b85028b0de6f7d3028ae0424d4f238f7df)
+- Se um plugin estiver em beta, mas não tiver um changelog beta, o centro de atualização retornará ao changelog estável [LINK](https://github.com/jeedom/core/commit/2af7b0a4d8680f68810cf9d07c657c51fe9e40bd)
+- Adicionado um alerta se a versão debian for 10 ou inferior [LINK](https://github.com/jeedom/core/issues/2912)
+- Corrigir erro de atualização do banco de dados na tabela de cache [LINK](https://github.com/jeedom/core/commit/a21f3498195f0003c5ead7cd5e8589f1c77c1c06)
+- Se a página do equipamento tiver um elemento img_device (tag tipo img), então o próprio núcleo pode configurar a url para exibir a imagem correta do equipamento (usando a da página de apresentação de todos os equipamentos do plugin) [LINK](https://github.com/jeedom/core/commit/07708ba4cbed982af968919dac3e406707867417)
+- Corrigido um bug com a função time_diff [LINK](https://github.com/jeedom/core/issues/2915)
+- Correção de bug no gerenciamento de dependências do compositor [LINK](https://github.com/jeedom/core/issues/2920)
+- No caso de comando vazio o Jeedom força o retorno de acordo com o subtipo do comando (então 0 para numérico e binário) [LINK](https://github.com/jeedom/core/commit/442d47246373e4f52b1dde7d1c7fdc9f67ea143e)
 
 >**IMPORTANTE**
 >

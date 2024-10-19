@@ -941,7 +941,7 @@ class cmd {
 	public static function deadCmd() {
 		$return = array();
 		foreach ((cmd::all()) as $cmd) {
-			if($cmd->getConfiguration('core::cmd::noDeadAnalyze',0) == 1){
+			if ($cmd->getConfiguration('core::cmd::noDeadAnalyze', 0) == 1) {
 				continue;
 			}
 			if (is_array($cmd->getConfiguration('actionCheckCmd', ''))) {
@@ -992,6 +992,12 @@ class cmd {
 			$_value = 0;
 		}
 		if (trim($_value) == '' && $_value !== false && $_value !== 0) {
+			if($this->getSubType() == 'numeric'){
+				return 0;
+			}
+			if($this->getSubType() == 'binary'){
+				return 0;
+			}
 			return '';
 		}
 		$_value = trim(trim($_value), '"');
@@ -1027,7 +1033,7 @@ class cmd {
 						$binary = true;
 					} elseif ((is_numeric(intval($_value)) && intval($_value) >= 1)) { // Handle number and numeric string
 						$binary = true;
-					} elseif (in_array(strtolower($_value), array('on', 'true', 'high', 'enable', 'enabled','online'))) { // Handle common string boolean values
+					} elseif (in_array(strtolower($_value), array('on', 'true', 'high', 'enable', 'enabled', 'online'))) { // Handle common string boolean values
 						$binary = true;
 					} else { // Handle everything else as false
 						$binary = false;
@@ -1144,7 +1150,7 @@ class cmd {
 	}
 
 	private function pre_postExecCmd($_values = array(), $_type = 'jeedomPreExecCmd') {
-		
+
 		if (!is_array($this->getConfiguration($_type)) || count($this->getConfiguration($_type)) == 0) {
 			return;
 		}
@@ -1892,7 +1898,7 @@ class cmd {
 		}
 		if ($repeat && $this->getConfiguration('repeatEventManagement', 'never') == 'never') {
 			$this->addHistoryValue($value, $this->getCollectDate());
-			event::adds('cmd::update', array(array('cmd_id' => $this->getId(), 'value' => (strlen($value) < 3096) ? $value : substr($value,0,3096), 'display_value' => (strlen($display_value) < 3096) ? $display_value :  substr($display_value,0,3096), 'unit' => $unit, 'raw_unit' => $raw_unit, 'valueDate' => $this->getValueDate(), 'collectDate' => $this->getCollectDate())));
+			event::adds('cmd::update', array(array('cmd_id' => $this->getId(), 'value' => (strlen($value) < 3096) ? $value : substr($value, 0, 3096), 'display_value' => (strlen($display_value) < 3096) ? $display_value :  substr($display_value, 0, 3096), 'unit' => $unit, 'raw_unit' => $raw_unit, 'valueDate' => $this->getValueDate(), 'collectDate' => $this->getCollectDate())));
 			return;
 		}
 		$_loop++;
@@ -1909,13 +1915,13 @@ class cmd {
 			$this->setCache(array('value' => $value, 'valueDate' => $this->getValueDate()));
 			scenario::check($this, false, $this->getGeneric_type(), $object, $value);
 			$level = $this->checkAlertLevel($value);
-			$events[] = array('cmd_id' => $this->getId(), 'value' => (strlen($value) < 3096) ? $value : substr($value,0,3096), 'display_value' => (strlen($display_value) < 3096) ? $display_value :  substr($display_value,0,3096), 'unit' => $unit, 'raw_unit' => $raw_unit, 'valueDate' => $this->getValueDate(), 'collectDate' => $this->getCollectDate(), 'alertLevel' => $level);
+			$events[] = array('cmd_id' => $this->getId(), 'value' => (strlen($value) < 3096) ? $value : substr($value, 0, 3096), 'display_value' => (strlen($display_value) < 3096) ? $display_value :  substr($display_value, 0, 3096), 'unit' => $unit, 'raw_unit' => $raw_unit, 'valueDate' => $this->getValueDate(), 'collectDate' => $this->getCollectDate(), 'alertLevel' => $level);
 			$foundInfo = false;
 			$value_cmd = self::byValue($this->getId(), null, true);
 			if (is_array($value_cmd) && count($value_cmd) > 0) {
 				foreach ($value_cmd as $cmd) {
 					if ($cmd->getType() == 'action') {
-						$events[] = array('cmd_id' => $cmd->getId(), 'value' => (strlen($value) < 3096) ? $value : substr($value,0,3096), 'display_value' => (strlen($display_value) < 3096) ? $display_value :  substr($display_value,0,3096), 'valueDate' => $this->getValueDate(), 'collectDate' => $this->getCollectDate(), 'unit' => $unit);
+						$events[] = array('cmd_id' => $cmd->getId(), 'value' => (strlen($value) < 3096) ? $value : substr($value, 0, 3096), 'display_value' => (strlen($display_value) < 3096) ? $display_value :  substr($display_value, 0, 3096), 'valueDate' => $this->getValueDate(), 'collectDate' => $this->getCollectDate(), 'unit' => $unit);
 					} else {
 						if ($_loop > 1) {
 							$cmd->event($cmd->execute(), null, $_loop);
@@ -1929,13 +1935,13 @@ class cmd {
 				listener::backgroundCalculDependencyCmd($this->getId());
 			}
 		} else {
-			$events[] = array('cmd_id' => $this->getId(), 'value' => (strlen($value) < 3096) ? $value : substr($value,0,3096), 'display_value' => (strlen($display_value) < 3096) ? $display_value :  substr($display_value,0,3096), 'unit' => $unit, 'raw_unit' => $raw_unit, 'valueDate' => $this->getValueDate(), 'collectDate' => $this->getCollectDate());
+			$events[] = array('cmd_id' => $this->getId(), 'value' => (strlen($value) < 3096) ? $value : substr($value, 0, 3096), 'display_value' => (strlen($display_value) < 3096) ? $display_value :  substr($display_value, 0, 3096), 'unit' => $unit, 'raw_unit' => $raw_unit, 'valueDate' => $this->getValueDate(), 'collectDate' => $this->getCollectDate());
 		}
 		if (count($events) > 0) {
 			event::adds('cmd::update', $events);
 		}
 		if (!$repeat) {
-			listener::check($this->getId(), $value, $this->getCollectDate(),$this);
+			listener::check($this->getId(), $value, $this->getCollectDate(), $this);
 			jeeObject::checkSummaryUpdate($this->getId());
 		}
 		$this->addHistoryValue($value, $this->getCollectDate());
@@ -1958,8 +1964,8 @@ class cmd {
 			}
 			$this->pushUrl($value);
 			$this->pushInflux($value);
-			if($this->getGeneric_type() == 'BATTERY' && $this->getUnite() == '%'){
-				$this->batteryStatus($value);
+			if ($this->getGeneric_type() == 'BATTERY' && $this->getUnite() == '%') {
+				$this->getEqLogic()->batteryStatus($value);
 			}
 		}
 	}
@@ -2851,7 +2857,12 @@ class cmd {
 
 	public function getUsedBy($_array = false) {
 		$return = array('cmd' => array(), 'eqLogic' => array(), 'scenario' => array(), 'plan' => array(), 'view' => array());
-		$return['cmd'] = array_merge(self::searchConfiguration('#' . $this->getId() . '#'), cmd::byValue($this->getId()));
+		$cmds = array_merge(self::searchConfiguration('#' . $this->getId() . '#'), cmd::byValue($this->getId()));
+		if(is_array($cmds) && count($cmds) > 0){
+			foreach ($cmds as $cmd) {
+				$return['cmd'][$cmd->getId()] = $cmd;
+			}
+		}
 		$return['eqLogic'] = eqLogic::searchConfiguration('#' . $this->getId() . '#');
 		$return['object'] = jeeObject::searchConfiguration('#' . $this->getId() . '#');
 		$return['scenario'] = scenario::searchByUse(array(array('action' => '#' . $this->getId() . '#')));

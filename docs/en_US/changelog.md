@@ -12,9 +12,8 @@
 - **DEV** Setting up a queue system for executing actions [LINK](https://github.com/jeedom/core/issues/2489)
 - Scenario tags are now specific to the scenario instance (if you have two scenario launches very close together, the tags of the last one no longer overwrite the first one)) [LINK](https://github.com/jeedom/core/issues/2763)
 - Change to the trigger part of the scenarios : [LINK](https://github.com/jeedom/core/issues/2414)
-  - ``triggerId()`` is now deprecated and will be removed in future core updates
-  - ``trigger()`` is now deprecated and will be removed in future core updates
-  - ``triggerValue()`` is now deprecated and will be removed in future core updates
+  - ``triggerId()`` is now deprecated and will be removed in future core updates. If you have ``triggerId() == 587`` it must be replaced by ``#trigger_id# == 587``
+  - ``triggerValue()`` is now deprecated and will be removed in future core updates. If you have ``triggerValue() == 10`` it must be replaced by ``#trigger_value# == 10``
   - ``#trigger#`` : Maybe :
     - ``api`` if the launch was triggered by the API,
     - ``TYPEcmd`` if the launch was triggered by a command, with TYPE replaced by the plugin id (eg virtualCmd),
@@ -66,12 +65,21 @@
 - Fixed an issue with select type commands in designs [LINK](https://github.com/jeedom/core/issues/2853)
 - Possibility to indicate that a piece of equipment has no battery (in case of poor feedback)) [LINK](https://github.com/jeedom/core/issues/2855)
 - Rework of writing in logs, removal of the monolog library (note that the option to send logs in syslog is no longer available at the moment, if demand is high we will see about putting it back) [LINK](https://github.com/jeedom/core/pull/2805)
-- Upgrading from nodejs 18 to nodejs 20 [LINK](https://github.com/jeedom/core/pull/2846)
 - Better management of plugin sub-log log level [LINK](https://github.com/jeedom/core/issues/2860)
 - Removed vendor folder (using composer normally), reduces core size [LINK](https://github.com/jeedom/core/commit/3aa99c503b6b1903e6a07b346ceb4d03ca3c0c42)
 - Widget specific settings can now be translated [LINK](https://github.com/jeedom/core/pull/2862)
 - Fixed a bug on mac on designs when right clicking [LINK](https://github.com/jeedom/core/issues/2863)
 - Improved the system for launching programmed scenarios [LINK](https://github.com/jeedom/core/issues/2875)
+- Improved exception error messages if log level is debug [LINK](https://github.com/jeedom/core/issues/2886)
+- On the replacement page, it is possible to request the deactivation of the equipment [LINK](https://github.com/jeedom/core/issues/2893)
+- When updating, the backup before now takes into account plugin exclusions [LINK](https://github.com/jeedom/core/commit/22aa19b85028b0de6f7d3028ae0424d4f238f7df)
+- If a plugin is in beta but does not have a beta changelog then the update center will link to the stable changelog [LINK](https://github.com/jeedom/core/commit/2af7b0a4d8680f68810cf9d07c657c51fe9e40bd)
+- Added alert if debian version is 10 or lower [LINK](https://github.com/jeedom/core/issues/2912)
+- Fix DB update error on cache table [LINK](https://github.com/jeedom/core/commit/a21f3498195f0003c5ead7cd5e8589f1c77c1c06)
+- If the equipment page has an img_device element (img type tag) then the core can itself configure the url to display the correct equipment image (using the one from the presentation page of all the plugin's equipment) [LINK](https://github.com/jeedom/core/commit/07708ba4cbed982af968919dac3e406707867417)
+- Fixed bug with time_diff function [LINK](https://github.com/jeedom/core/issues/2915)
+- Bug fix on composer dependency management [LINK](https://github.com/jeedom/core/issues/2920)
+- In case of empty command Jeedom forces the return according to the subtype of the command (therefore 0 for numeric and binary) [LINK](https://github.com/jeedom/core/commit/442d47246373e4f52b1dde7d1c7fdc9f67ea143e)
 
 >**IMPORTANT**
 >

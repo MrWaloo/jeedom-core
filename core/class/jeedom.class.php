@@ -263,7 +263,7 @@ class jeedom {
 
 		$return[] = array(
 			'name' => __('Version OS', __FILE__),
-			'state' => (system::getDistrib() != 'debian' || version_compare(system::getOsVersion(), '10', '>=')),
+			'state' => (system::getDistrib() == 'debian' && version_compare(system::getOsVersion(), config::byKey('os::min'), '>=')),
 			'result' => system::getDistrib() . ' ' . system::getOsVersion(),
 			'comment' => '',
 			'key' => 'os::version'
@@ -1556,7 +1556,7 @@ class jeedom {
 		if (count($_eqlogics) == 0 && count($_cmds) == 0) {
 			throw new Exception('{{Aucun équipement ou commande à remplacer ou copier}}');
 		}
-		foreach (['copyEqProperties', 'hideEqs', 'copyCmdProperties', 'removeCmdHistory', 'copyCmdHistory'] as $key) {
+		foreach (['copyEqProperties', 'hideEqs', 'copyCmdProperties', 'removeCmdHistory', 'copyCmdHistory','disableEqs'] as $key) {
 			if (!isset($_options[$key])) {
 				$_options[$key] = false;
 			}
@@ -1643,11 +1643,20 @@ class jeedom {
 				$targetEq->save();
 				$return['eqlogics'] += 1;
 			}
-		} elseif ($_options['hideEqs'] == "true") {
+		} 
+		if ($_options['hideEqs'] == "true") {
 			foreach ($_eqlogics as $_sourceId => $_targetId) {
 				$sourceEq = eqLogic::byId($_sourceId);
 				if (!is_object($sourceEq)) continue;
 				$sourceEq->setIsVisible(0);
+				$sourceEq->save();
+			}
+		}
+		if ($_options['disableEqs'] == "true") {
+			foreach ($_eqlogics as $_sourceId => $_targetId) {
+				$sourceEq = eqLogic::byId($_sourceId);
+				if (!is_object($sourceEq)) continue;
+				$sourceEq->setIsEnable(0);
 				$sourceEq->save();
 			}
 		}
@@ -1802,7 +1811,7 @@ class jeedom {
 			$result = 'Atlas';
 		} else if (strpos($hostname, 'Luna') !== false) {
 			$result = 'Luna';
-		} else if (strpos(shell_exec('cat /proc/1/sched | head -n 1'),'systemd') === false){
+		} else if (file_exists('/proc/1/sched') && strpos(shell_exec('cat /proc/1/sched | head -n 1'),'systemd') === false){
 			$result = 'docker';
 		}
 		config::save('hardware_name', $result);

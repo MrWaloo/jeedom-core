@@ -258,9 +258,12 @@ You can use any of the following symbols for comparisons under conditions :
 
 You can combine any comparison with the following operators :
 
-- ``&&`` : And. It is also possible to use : ``ET`` / ``et`` / ``AND`` / ``and`` but may not work well with some php functions.
-- ``||`` : Or. It is also possible to use : ``OU`` / ``ou`` / ``OR`` / ``or`` but may not work well with some php functions.
-- ``xor``  : or exclusive. It is also possible to use : ``XOR`` / ``^`` but may not work well with some php functions.
+Whether you are combining comparisons on different equipment or on the same one, it is always necessary to indicate the equipment.
+``[Salle de bain][Hydrometrie][température] >= 18 && [Salle de bain][Hydrometrie][température] <= 22``
+
+- ``&&`` : And. **Attention**, the use of  : ``ET`` / ``et`` / ``AND`` / ``and`` is not recommended, in some cases it may work but with some php functions it will not work.
+- ``||`` : Or. **Attention**, the use of  : ``OU`` / ``ou`` / ``OR`` / ``or`` is not recommended, in some cases it may work but with some php functions it will not work.
+- ``xor``  : or exclusive. **Attention**, the use of  : ``XOR`` / ``^`` is not recommended, in some cases it may work but with some php functions it will not work.
 
 ### Tags
 
@@ -293,8 +296,8 @@ A tag is replaced during the execution of the scenario by its value. You can use
   - ``schedule`` if it was started by programming,
   - ``user`` if it was started manually,
   - ``start`` for a launch at startup of Jeedom.
-- ``#trigger_id#`` : If it is a command which triggered the scenario then this tag has the value of the id of the command which triggered it.
-- ``#trigger_name#`` : If it is a command which triggered the scenario then this tag has the value of the name of the command (in the form [object][equipment][command])
+- ``#trigger_id#`` : If it is a command which triggered the scenario then this tag has the value of the id of the command which triggered it. Example : ``#trigger_id# == 19``
+- ``#trigger_name#`` : If it is a command which triggered the scenario then this tag has the value of the name of the command (in the form [object][equipment][command]). Example : ``#trigger_name# == '[cuisine][lumiere][etat]'``
 - ``#trigger_value#`` : If it is a command which triggered the scenario then this tag has the value of the command which triggered the scenario. Tip if you want the current value of the command which triggered the scenario (and not its value at triggering) you can use : ``##trigger_id##`` (double #)
 - ``#latitude#`` : Allows you to retrieve the latitude information put in the jeedom configuration
 - ``#longitude#`` : Allows you to retrieve the longitude information put in the jeedom configuration

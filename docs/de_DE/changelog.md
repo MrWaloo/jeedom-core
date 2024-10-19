@@ -12,9 +12,8 @@
 - **ENTW** Einrichten eines Warteschlangensystems zur Ausführung von Aktionen [LINK](https://github.com/jeedom/core/issues/2489)
 - Szenario-Tags sind jetzt spezifisch für die Szenarioinstanz (wenn Sie zwei sehr nahe beieinander liegende Szenariostarts haben, überschreiben die Tags des letzten Szenarios nicht mehr das erste)) [LINK](https://github.com/jeedom/core/issues/2763)
 - Wechseln Sie zum Auslöserteil der Szenarien : [LINK](https://github.com/jeedom/core/issues/2414)
-  - ``triggerId()`` ist jetzt veraltet und wird in zukünftigen Kernaktualisierungen entfernt
-  - ``trigger()`` ist jetzt veraltet und wird in zukünftigen Kernaktualisierungen entfernt
-  - ``triggerValue()`` ist jetzt veraltet und wird in zukünftigen Kernaktualisierungen entfernt
+  - ``triggerId()`` ist jetzt veraltet und wird in zukünftigen Kernaktualisierungen entfernt. Wenn ja ``triggerId() == 587`` es muss durch ersetzt werden ``#trigger_id# == 587``
+  - ``triggerValue()`` ist jetzt veraltet und wird in zukünftigen Kernaktualisierungen entfernt. Wenn ja ``triggerValue() == 10`` es muss durch ersetzt werden ``#trigger_value# == 10``
   - ``#trigger#`` : Vielleicht :
     - ``api`` wenn der Start durch die API ausgelöst wurde,
     - ``TYPEcmd`` Wenn der Start durch einen Befehl ausgelöst wurde, wird TYPE durch die Plugin-ID ersetzt (z. B. virtualCmd),
@@ -66,12 +65,21 @@
 - Ein Problem mit Befehlen zur Typauswahl in Designs wurde behoben [LINK](https://github.com/jeedom/core/issues/2853)
 - Möglichkeit der Anzeige, dass das Gerät keine Batterie hat (im Falle einer schlechten Wiederherstellung)) [LINK](https://github.com/jeedom/core/issues/2855)
 - Neugestaltung des Schreibens in Protokollen, Entfernung der Monolog-Bibliothek (beachten Sie, dass die Option zum Senden von Protokollen im Syslog derzeit nicht mehr verfügbar ist. Bei hoher Nachfrage werden wir versuchen, sie wieder einzuführen) [LINK](https://github.com/jeedom/core/pull/2805)
-- Wechsel von NodeJS 18 zu NodeJS 20 [LINK](https://github.com/jeedom/core/pull/2846)
 - Bessere Verwaltung der Plugin-Sublog-Protokollebenen [LINK](https://github.com/jeedom/core/issues/2860)
 - Durch das Löschen des Vendor-Ordners (mit Composer auf normale Weise) können Sie die Größe des Kerns reduzieren [LINK](https://github.com/jeedom/core/commit/3aa99c503b6b1903e6a07b346ceb4d03ca3c0c42)
 - Widgetspezifische Einstellungen können jetzt übersetzt werden [LINK](https://github.com/jeedom/core/pull/2862)
 - Ein Fehler auf dem Mac bei Designs beim Rechtsklick wurde behoben [LINK](https://github.com/jeedom/core/issues/2863)
 - Verbesserung des Systems zum Starten programmierter Szenarien [LINK](https://github.com/jeedom/core/issues/2875)
+- Verbesserte Ausnahmefehlermeldungen, wenn die Protokollebene Debug ist [LINK](https://github.com/jeedom/core/issues/2886)
+- Auf der Ersatzseite besteht die Möglichkeit, die Deaktivierung des Geräts zu beantragen [LINK](https://github.com/jeedom/core/issues/2893)
+- Bei einem Update berücksichtigt das Forward-Backup nun Plugin-Ausschlüsse [LINK](https://github.com/jeedom/core/commit/22aa19b85028b0de6f7d3028ae0424d4f238f7df)
+- Wenn sich ein Plugin in der Beta-Phase befindet, aber kein Beta-Änderungsprotokoll hat, kehrt das Update-Center zum stabilen Änderungsprotokoll zurück [LINK](https://github.com/jeedom/core/commit/2af7b0a4d8680f68810cf9d07c657c51fe9e40bd)
+- Es wurde eine Warnung hinzugefügt, wenn die Debian-Version 10 oder niedriger ist [LINK](https://github.com/jeedom/core/issues/2912)
+- Fehler bei der DB-Aktualisierung in der Cache-Tabelle behoben [LINK](https://github.com/jeedom/core/commit/a21f3498195f0003c5ead7cd5e8589f1c77c1c06)
+- Wenn die Geräteseite über ein img_device-Element (img-Typ-Tag) verfügt, kann der Kern selbst die URL konfigurieren, um das richtige Gerätebild anzuzeigen (unter Verwendung des Bildes der Präsentationsseite aller Plugin-Geräte)) [LINK](https://github.com/jeedom/core/commit/07708ba4cbed982af968919dac3e406707867417)
+- Ein Fehler mit der Funktion time_diff wurde behoben [LINK](https://github.com/jeedom/core/issues/2915)
+- Fehlerbehebung bei der Composer-Abhängigkeitsverwaltung [LINK](https://github.com/jeedom/core/issues/2920)
+- Im Falle eines leeren Befehls erzwingt Jeedom die Rückgabe entsprechend dem Untertyp des Befehls (also 0 für numerisch und binär)) [LINK](https://github.com/jeedom/core/commit/442d47246373e4f52b1dde7d1c7fdc9f67ea143e)
 
 >**WICHTIG**
 >

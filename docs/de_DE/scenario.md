@@ -258,9 +258,12 @@ Sie können eines der folgenden Symbole für Vergleiche unter Bedingungen verwen
 
 Sie können jeden Vergleich mit den folgenden Operatoren kombinieren :
 
-- ``&&`` : Und. Es ist auch möglich zu verwenden : ``ET`` /. ``et`` /. ``AND`` /. ``and`` funktioniert aber möglicherweise nicht gut mit einigen PHP-Funktionen.
-- ``||`` : Oder. Es ist auch möglich zu verwenden : ``OU`` /. ``ou`` /. ``OR`` /. ``or`` funktioniert aber möglicherweise nicht gut mit einigen PHP-Funktionen.
-- ``xor``  : oder exklusiv. Es ist auch möglich zu verwenden : ``XOR`` /. ``^`` funktioniert aber möglicherweise nicht gut mit einigen PHP-Funktionen.
+Unabhängig davon, ob Sie Vergleiche mit unterschiedlichen Geräten oder mit demselben Gerät kombinieren, ist es immer notwendig, das Gerät anzugeben.
+``[Salle de bain][Hydrometrie][température] >= 18 && [Salle de bain][Hydrometrie][température] <= 22``
+
+- ``&&`` : Und. **Aufmerksamkeit**, die Verwendung von  : ``ET`` /. ``et`` /. ``AND`` /. ``and`` wird nicht empfohlen, in einigen Fällen funktioniert es möglicherweise, aber mit einigen PHP-Funktionen funktioniert es nicht.
+- ``||`` : Oder. **Aufmerksamkeit**, die Verwendung von  : ``OU`` /. ``ou`` /. ``OR`` /. ``or`` wird nicht empfohlen, in einigen Fällen funktioniert es möglicherweise, aber mit einigen PHP-Funktionen funktioniert es nicht.
+- ``xor``  : oder exklusiv. **Aufmerksamkeit**, die Verwendung von  : ``XOR`` /. ``^`` wird nicht empfohlen, in einigen Fällen funktioniert es möglicherweise, aber mit einigen PHP-Funktionen funktioniert es nicht.
 
 ### Tags
 
@@ -293,8 +296,8 @@ Ein Tag wird während der Ausführung des Szenarios durch seinen Wert ersetzt. S
   - ``schedule`` wenn es durch Programmierung gestartet wurde,
   - ``user`` wenn es manuell gestartet wurde,
   - ``start`` für einen Start beim Start von Jeedom.
-- ``#trigger_id#`` : Wenn es sich um einen Befehl handelt, der das Szenario ausgelöst hat, hat dieses Tag den Wert der ID des Befehls, der es ausgelöst hat.
-- ``#trigger_name#`` : Wenn es sich um einen Befehl handelt, der das Szenario ausgelöst hat, hat dieses Tag den Wert des Namens des Befehls (in der Form [Objekt][Ausrüstung][Befehl])
+- ``#trigger_id#`` : Wenn es sich um einen Befehl handelt, der das Szenario ausgelöst hat, hat dieses Tag den Wert der ID des Befehls, der es ausgelöst hat. Beispiel : ``#trigger_id# == 19``
+- ``#trigger_name#`` : Wenn es sich um einen Befehl handelt, der das Szenario ausgelöst hat, hat dieses Tag den Wert des Namens des Befehls (in der Form [Objekt][Ausrüstung][Befehl]). Beispiel : ``#trigger_name# == '[cuisine][lumiere][etat]'``
 - ``#trigger_value#`` : Wenn es sich um einen Befehl handelt, der das Szenario ausgelöst hat, hat dieses Tag den Wert des Befehls, der das Szenario ausgelöst hat. Tipp: Wenn Sie den aktuellen Wert des Befehls möchten, der das Szenario ausgelöst hat (und nicht seinen Wert zum Zeitpunkt der Auslösung), können Sie diesen verwenden : ``##trigger_id##`` (doppelt #)
 - ``#latitude#`` : Ermöglicht Ihnen, die in der Jeedom-Konfiguration eingegebenen Breitengradinformationen abzurufen
 - ``#longitude#`` : Ermöglicht Ihnen, die in der Jeedom-Konfiguration eingegebenen Längengradinformationen abzurufen

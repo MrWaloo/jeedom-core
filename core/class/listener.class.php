@@ -308,14 +308,12 @@ class listener {
 		$this->event = array();
 	}
 
-	public function addEvent($_id, $_type = 'cmd') {
+	public function addEvent($_id) {
 		$event = $this->getEvent();
 		if (!is_array($event)) {
 			$event = array();
 		}
-		if ($_type == 'cmd') {
-			$id = str_replace('#', '', $_id);
-		}
+		$id = trim($_id, '#');
 		if (!in_array('#' . $id . '#', $event)) {
 			$event[] = '#' . $id . '#';
 		}
