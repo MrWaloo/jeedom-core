@@ -80,11 +80,14 @@
 - Correction d'un bug avec la fonction time_diff [LIEN](https://github.com/jeedom/core/issues/2915)
 - Correction de bug sur la gestion de dépendances composer [LIEN](https://github.com/jeedom/core/issues/2920)
 - En cas de commande vide Jeedom force le retour en fonction du sous type de la commande (donc 0 pour numerique et binaire) [LIEN](https://github.com/jeedom/core/commit/442d47246373e4f52b1dde7d1c7fdc9f67ea143e)
-
->**IMPORTANT**
->
-> Dû au changement de moteur de cache sur cette mise à jour, tout le cache sera perdu, aucune inquiétude c'est du cache il va se reconstituer de lui-même. Le cache contient entre-autre les valeurs des commandes qui se remettront à jour automatiquement lorsque les modules remonteront leur valeur. A noter que si vous avez des virtuels à valeur fixe (ce qui n'est pas bien si ça ne change pas alors il faut utiliser les variables) alors il vous faudra resauvegarder ceux-ci pour récupérer la valeur.
+- Prise en charge des évènements personnalisés de type #pluginClass::*# ou #pluginClass::customId# [LIEN](https://github.com/jeedom/core/pull/2964)
+- Ajout d'un bouton de mise à jour sur la ligne "core" en plus de celui en haut à droite [LIEN](https://github.com/jeedom/core/pull/2974)
+- Correction de l'écran "package" au niveau des packages python2 [LIEN](https://github.com/jeedom/core/pull/2973)
 
 >**IMPORTANT**
 >
 > Dû à la refonte des logs et la réinternalisation de bibliothèques, lors de la mise à jour vous pouvez avoir une erreur type ``PHP Fatal error`` (rien de grave) il suffit de relancer la mise à jour.
+
+>**IMPORTANT**
+>
+> La restoration d'un backup 4.4 peut dans certain cas poser soucis et finir par des erreurs dans l'interface web. Rien de grave cela peut facilement ce corriger il suffit de faire : `cd /tmp;wget https://github.com/jeedom/core/archive/refs/tags/4.4.19.zip;unzip 4.4.19.zip;cd core-4.4.19;cp -rf * /var/www/html/;rm -rf /tmp/master.zip;rm -rf /tmp/core-4.4.19;`. Vous pouvez ca depuis l'interface rescue de jeedom (ajouter &rescue=1 dans l'url), ou directement en ssh.

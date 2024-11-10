@@ -80,11 +80,12 @@
 - Se corrigió un error con la función time_diff [ENLACE](https://github.com/jeedom/core/issues/2915)
 - Corrección de errores en la gestión de dependencias del compositor [ENLACE](https://github.com/jeedom/core/issues/2920)
 - En caso de un comando vacío, Jeedom fuerza el retorno de acuerdo con el subtipo del comando (por lo tanto, 0 para números y binarios)) [ENLACE](https://github.com/jeedom/core/commit/442d47246373e4f52b1dde7d1c7fdc9f67ea143e)
-
->**IMPORTANTE**
->
-> Debido al cambio del motor de caché en esta actualización, todo el caché se perderá, no te preocupes, el caché se reconstruirá solo. El caché contiene, entre otras cosas, los valores de los comandos que se actualizarán automáticamente cuando los módulos aumenten su valor. Ten en cuenta que si tienes virtuales con un valor fijo (lo cual no es bueno si no cambia entonces tienes que usar variables) entonces tendrás que guardarlos nuevamente para recuperar el valor.
+- Soporte para eventos de tipo personalizado #pluginClass::*# O #pluginClass::customId# [ENLACE](https://github.com/jeedom/core/pull/2964)
 
 >**IMPORTANTE**
 >
 > Debido a la revisión de registros y la reinternalización de bibliotecas, durante la actualización puede aparecer un error estándar ``PHP Fatal error`` (nada grave) simplemente reinicie la actualización.
+
+>**IMPORTANTE**
+>
+> Restaurar una copia de seguridad 4.4 puede en ciertos casos causar problemas y terminar con errores en la interfaz web. Rien de grave cela peut facilement ce corriger il suffit de faire : `cd /tmp;wgY https://github.com/jeedom/core/archive/refs/tags/4.4.19.zip;descomprimir 4.4.19.zip;cd core-4.4.19;cp -rf * /var/www/html/;rm -rf /tmp/master.zip;rm -rf /tmp/core-4.4.19;`. Puedes hacer esto desde la interfaz de rescate de jeedom (agrega &rescue=1 en la URL) o directamente a través de ssh.

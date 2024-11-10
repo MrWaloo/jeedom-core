@@ -3512,8 +3512,8 @@
         "Info": "Информация",
         "Action": "Действие",
         "Sélectionner la commande": "Выберите команду",
-        "Valider": "Validate",
-        "Annuler": "Отменить"
+        "Annuler": "Отменить",
+        "Valider": "Validate"
     },
     "core\/js\/scenario.class.js": {
         "Sélectionner le scénario": "Выберите сценарий",
@@ -4078,6 +4078,7 @@
     },
     "core\/ajax\/message.ajax.php": {
         "401 - Accès non autorisé": "401 - Несанкционированный доступ",
+        "Vous n\\'êtes pas autorisé à effectuer cette action": "Vous n\\'êtes pas autorisé à effectuer cette action",
         "Message inconnu. Vérifiez l\\'ID": "Message inconnu. Vérifiez l\\'ID",
         "Aucune méthode correspondante à :": "Aucune methode correspondante à :"
     },

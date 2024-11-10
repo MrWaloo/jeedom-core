@@ -98,6 +98,9 @@ try {
 		$backup_ok = true;
 	}
 	echo "[PROGRESS][10]\n";
+
+	echo "[PROGRESS][12]\n";
+
 	if (init('core', 1) == 1) {
 		if (init('mode') == 'force') {
 			echo "/!\ Force update /!\ \n";

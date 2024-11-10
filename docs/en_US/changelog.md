@@ -80,11 +80,12 @@
 - Fixed bug with time_diff function [LINK](https://github.com/jeedom/core/issues/2915)
 - Bug fix on composer dependency management [LINK](https://github.com/jeedom/core/issues/2920)
 - In case of empty command Jeedom forces the return according to the subtype of the command (therefore 0 for numeric and binary) [LINK](https://github.com/jeedom/core/commit/442d47246373e4f52b1dde7d1c7fdc9f67ea143e)
-
->**IMPORTANT**
->
-> Due to the change of cache engine on this update, all cache will be lost, don't worry it's cache it will rebuild itself. The cache contains, among other things, the values of the commands which will be automatically updated when the modules update their value. Note that if you have fixed value virtuals (which is not good if it does not change so you have to use variables) then you will have to resave them to recover the value.
+- Support for custom events of type #pluginClass::*# Or #pluginClass::customId# [LINK](https://github.com/jeedom/core/pull/2964)
 
 >**IMPORTANT**
 >
 > Due to the rework of logs and the re-internalization of libraries, when updating you may have an error type ``PHP Fatal error`` (nothing serious) just restart the update.
+
+>**IMPORTANT**
+>
+> Restoring a backup 4.4 can in some cases cause problems and end up with errors in the web interface. Rien de grave cela peut facilement ce corriger il suffit de faire : `cd /tmp;wgAnd https://github.com/jeedom/core/archive/refs/tags/4.4.19.zip;unzip 4.4.19.zip;cd core-4.4.19;cp -rf * /var/www/html/;rm -rf /tmp/master.zip;rm -rf /tmp/core-4.4.19;`. You can do this from the jeedom rescue interface (add &rescue=1 in the url), or directly in ssh.
