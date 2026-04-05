@@ -233,7 +233,7 @@ document.getElementById('wrap')?.addEventListener('click', function(event) {
     event.stopPropagation();
     var _el = event.target.matches('a.bt_showPassConnection') ? event.target : event.target.parentNode;
     var input = _el.closest('.input-group').querySelector('input');
-
+    
     if (input.getAttribute('type') === 'password') {
         input.setAttribute('type', 'text');
     } else {

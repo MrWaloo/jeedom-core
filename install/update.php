@@ -30,7 +30,7 @@ $backup_ok = false;
 $update_begin = false;
 try {
 	require_once __DIR__ . '/../core/php/core.inc.php';
-	
+
 	echo "[PROGRESS][1]\n";
 	if (count(system::ps('install/update.php', 'sudo')) > 1) {
 		echo "Update in progress. I will wait 10s\n";
@@ -76,7 +76,7 @@ try {
 	echo "[PROGRESS][5]\n";
 	try {
 		echo "Check rights...";
-		if(method_exists('jeedom','cleanFileSystemRight')){
+		if (method_exists('jeedom', 'cleanFileSystemRight')) {
 			jeedom::cleanFileSystemRight();
 		}
 		echo "OK\n";
@@ -85,8 +85,6 @@ try {
 	}
 	if (init('backup::before') == 1 && init('force') != 1) {
 		try {
-			global $NO_PLUGIN_BACKUP;
-			$NO_PLUGIN_BACKUP = true;
 			global $NO_CLOUD_BACKUP;
 			$NO_CLOUD_BACKUP = true;
 			jeedom::backup();
@@ -100,22 +98,9 @@ try {
 		$backup_ok = true;
 	}
 	echo "[PROGRESS][10]\n";
-	try {
-		echo "Save cache state of cmd and eqLogic...";
-		$data = array('cmd' => array(),'eqLogic' => array());
-		foreach(cmd::all() as  $cmd){
-		  $data['cmd'][$cmd->getId()] = $cmd->getCache();
-		}
-		foreach(eqLogic::all() as  $eqLogic){
-		  $data['eqLogic'][$eqLogic->getId()] = $eqLogic->getCache();
-		}
-		file_put_contents('/tmp/jeedom/cache.json',json_encode($data));
-		echo "OK";
-	} catch (Exception $e) {
-		echo '***WARNING***' . $e->getMessage();
-	}
+
 	echo "[PROGRESS][12]\n";
-	
+
 	if (init('core', 1) == 1) {
 		if (init('mode') == 'force') {
 			echo "/!\ Force update /!\ \n";
@@ -126,9 +111,9 @@ try {
 			$tmp = $tmp_dir . '/jeedom_update.zip';
 			try {
 				if (config::byKey('core::repo::provider') == 'default') {
-					if(strpos(config::byKey('core::branch'),'tag::') === 0){
-						$url = 'https://github.com/jeedom/core/archive/refs/tags/'.str_replace('tag::','',config::byKey('core::branch')).'.zip';
-					}else{
+					if (strpos(config::byKey('core::branch'), 'tag::') === 0) {
+						$url = 'https://github.com/jeedom/core/archive/refs/tags/' . str_replace('tag::', '', config::byKey('core::branch')) . '.zip';
+					} else {
 						$url = 'https://github.com/jeedom/core/archive/' . config::byKey('core::branch') . '.zip';
 					}
 					echo "Download url : " . $url . "\n";
@@ -176,14 +161,14 @@ try {
 				echo "[PROGRESS][35]\n";
 				echo "Unzip in progress...";
 				$zip = new ZipArchive;
-                                $open = $zip->open($tmp);
+				$open = $zip->open($tmp);
 				if ($open === TRUE) {
 					if (!$zip->extractTo($cibDir)) {
-						throw new Exception('Can not unzip file => '.$zip->getStatusString());
+						throw new Exception('Can not unzip file => ' . $zip->getStatusString());
 					}
 					$zip->close();
 				} else {
-					throw new Exception('Unable to unzip file : ' . $tmp.' =>'.$open);
+					throw new Exception('Unable to unzip file : ' . $tmp . ' =>' . $open);
 				}
 				echo "OK\n";
 				if (disk_free_space($cibDir) < 10) {
@@ -225,15 +210,17 @@ try {
 				}
 				jeedom::stop();
 				echo "[PROGRESS][45]\n";
-				if(version_compare(PHP_VERSION, '8.0.0') >= 0 && file_exists($cibDir . '/vendor')){
-					shell_exec('rm -rf ' . $cibDir . '/vendor');
-				}
+
+				echo "Remove vendor folder (not use anymore)...";
+				shell_exec('rm -rf ' . $cibDir . '/vendor');
+				echo "OK\n";
+				echo "[PROGRESS][46]\n";
 
 				echo "Update modification date of unzip file...";
-				shell_exec('find '.$cibDir.'/ -exec touch {} +');
+				shell_exec('find ' . $cibDir . '/ -exec touch {} +');
 				echo "OK\n";
 				echo "[PROGRESS][47]\n";
-				
+
 				echo "Moving files...";
 				$update_begin = true;
 				$file_copy = array();
@@ -250,7 +237,7 @@ try {
 				}
 				echo "OK\n";
 				echo "[PROGRESS][52]\n";
-				if(strpos(config::byKey('core::branch'),'tag::') !== 0){
+				if (strpos(config::byKey('core::branch'), 'tag::') !== 0) {
 					echo "Remove useless files...\n";
 					foreach (array('3rdparty', 'desktop', 'mobile', 'core', 'docs', 'install', 'script') as $folder) {
 						echo 'Cleaning ' . $folder . "\n";
@@ -259,24 +246,23 @@ try {
 					echo "OK\n";
 				}
 				echo "[PROGRESS][53]\n";
-				if(config::byKey('update::composerUpdate') == 1 || version_compare(PHP_VERSION, '8.0.0') >= 0){
-					if (exec('which composer | wc -l') == 0) {
-						echo "\nNeed to install composer...";
-						echo shell_exec('sudo ' . __DIR__ . '/../resources/install_composer.sh');
-						echo "OK\n";
-					}
-					echo "Update composer file...\n";
-					if (exec('which composer | wc -l') > 0) {
-						shell_exec('export COMPOSER_HOME="/tmp/composer";export COMPOSER_ALLOW_SUPERUSER=1;'.system::getCmdSudo().' composer self-update > /dev/null 2>&1');
-						shell_exec('cd ' . __DIR__ . '/../;export COMPOSER_ALLOW_SUPERUSER=1;export COMPOSER_HOME="/tmp/composer";'.system::getCmdSudo().' composer update --no-interaction --no-plugins --no-scripts --no-ansi --no-dev --no-progress --optimize-autoloader --with-all-dependencies --no-cache > /dev/null 2>&1');
-						shell_exec(system::getCmdSudo().' rm /tmp/composer 2>/dev/null');
-						if(method_exists('jeedom','cleanFileSystemRight')){
-							jeedom::cleanFileSystemRight();
-						}
-					}
+				if (exec('which composer | wc -l') == 0) {
+					echo "\nNeed to install composer...";
+					echo shell_exec(system::getCmdSudo() . ' ' . __DIR__ . '/../resources/install_composer.sh');
 					echo "OK\n";
-					echo "[PROGRESS][58]\n";
 				}
+				echo "Update composer file...\n";
+				if (exec('which composer | wc -l') > 0) {
+					shell_exec(system::getCmdSudo() . ' rm ' . __DIR__ . '/../composer.lock');
+					shell_exec('export COMPOSER_HOME="/tmp/composer";export COMPOSER_ALLOW_SUPERUSER=1;' . system::getCmdSudo() . ' composer self-update > /dev/null 2>&1');
+					shell_exec('cd ' . __DIR__ . '/../;export COMPOSER_ALLOW_SUPERUSER=1;export COMPOSER_HOME="/tmp/composer";' . system::getCmdSudo() . ' composer update --no-interaction --no-plugins --no-scripts --no-ansi --no-dev --no-progress --optimize-autoloader --with-all-dependencies --no-cache > /dev/null 2>&1');
+					shell_exec(system::getCmdSudo() . ' rm /tmp/composer 2>/dev/null');
+					if (method_exists('jeedom', 'cleanFileSystemRight')) {
+						jeedom::cleanFileSystemRight();
+					}
+				}
+				echo "OK\n";
+				echo "[PROGRESS][58]\n";
 				echo "Update jeedom information date...\n";
 				try {
 					$update = update::byLogicalId('jeedom');
@@ -410,6 +396,9 @@ echo "[END UPDATE SUCCESS]\n";
 
 function incrementVersion($_version) {
 	$version = explode('.', $_version);
+	if (!isset($version[2])) {
+		$version[2] = 0;
+	}
 	if ($version[2] < 100) {
 		$version[2]++;
 	} else {

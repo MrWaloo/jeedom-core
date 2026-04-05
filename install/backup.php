@@ -77,7 +77,7 @@ try {
 		}
 	}
 
-	echo "Checking  database...";
+
 	if (isset($CONFIG['db']['unix_socket'])) {
 		$str_db_connexion = "--socket=" . $CONFIG['db']['unix_socket'] . " --user=" . $CONFIG['db']['username'] . " --password='" . $CONFIG['db']['password'] . "' " . $CONFIG['db']['dbname'];
 	} else {
@@ -87,8 +87,16 @@ try {
 			$str_db_connexion = "--host=" . $CONFIG['db']['host'] . " --port=" . $CONFIG['db']['port'] . " --user=" . $CONFIG['db']['username'] . " --password='" . $CONFIG['db']['password'] . "' " . $CONFIG['db']['dbname'];
 		}
 	}
-	system("mysqlcheck " . $str_db_connexion . ' --auto-repair --silent');
-	echo "OK" . "\n";
+	$tables = DB::Prepare("SHOW TABLES", array(), DB::FETCH_TYPE_ALL);
+	foreach ($tables as $table) {
+		$table = array_values($table)[0];
+		if ($table == 'event') {
+			continue;
+		}
+		echo "Checking  table " . $table . "...";
+		system("mysqlcheck " . $str_db_connexion . ' --auto-repair --silent --tables ' . $table);
+		echo "OK" . "\n";
+	}
 
 	echo 'Backing up database...';
 	if (file_exists($jeedom_dir . "/DB_backup.sql")) {
@@ -101,7 +109,7 @@ try {
 		throw new Exception('can\'t delete database backup. Check rights');
 	}
 	system("mysqldump " . $str_db_connexion . "  > " . $jeedom_dir . "/DB_backup.sql", $rc);
-	
+
 	if ($rc != 0) {
 		throw new Exception('Backing up database failed. Check mysqldump installation. Code: ' . $rc);
 	}
@@ -122,7 +130,7 @@ try {
 
 	$excludes = array(
 		'tmp',
-		'log',
+		'./log',
 		'docs',
 		'doc',
 		'tests',
@@ -137,11 +145,10 @@ try {
 		'data/imgOs',
 		'python_venv',
 		'resources/venv',
+		'/vendor',
+		'install/update/*.img.gz',
 		config::byKey('backup::path'),
 	);
-	if (version_compare(PHP_VERSION, '8.0.0') >= 0) {
-		$excludes[] = '/vendor';
-	}
 
 	if (config::byKey('recordDir', 'camera') != '') {
 		$excludes[] = config::byKey('recordDir', 'camera');
@@ -189,10 +196,10 @@ try {
 			if ($value['scope']['backup'] === false) {
 				continue;
 			}
-			if (config::byKey($key . '::enable','core',0) == 0) {
+			if (config::byKey($key . '::enable', 'core', 0) == 0) {
 				continue;
 			}
-			if (config::byKey($key . '::cloudUpload','core',0) == 0) {
+			if (config::byKey($key . '::cloudUpload', 'core', 0) == 0) {
 				continue;
 			}
 			$class = 'repo_' . $key;

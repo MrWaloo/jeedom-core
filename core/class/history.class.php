@@ -30,6 +30,15 @@ class history {
 
 	/*     * ***********************Methode static*************************** */
 
+	public static function removeHistoryInFutur(){
+		$sql = 'DELETE FROM history 
+		WHERE `datetime` > :datetime';
+		DB::Prepare($sql, array('datetime' => date('Y-m-d H:i:s')), DB::FETCH_TYPE_ROW);
+		$sql = 'DELETE FROM historyArch 
+		WHERE `datetime` > :datetime';
+		DB::Prepare($sql, array('datetime' => date('Y-m-d H:i:s')), DB::FETCH_TYPE_ROW);
+	  }
+
 	public static function checkCurrentValueAndHistory() {
 		$sql = 'SELECT DISTINCT(cmd_id)
         FROM history';
@@ -217,14 +226,6 @@ class history {
 		DB::Prepare($sql, array());
 		$sql = 'DELETE FROM historyArch WHERE `value` IS NULL';
 		DB::Prepare($sql, array());
-		$sql = 'DELETE FROM history WHERE `datetime` <= "2000-01-01 01:00:00" OR  `datetime` >= "2026-01-01 01:00:00"';
-		DB::Prepare($sql, array());
-		$sql = 'DELETE FROM historyArch WHERE `datetime` <= "2000-01-01 01:00:00" OR  `datetime` >= "2026-01-01 01:00:00"';
-		DB::Prepare($sql, array());
-		$sql = 'DELETE FROM history WHERE `value` IS NULL';
-		DB::Prepare($sql, array());
-		$sql = 'DELETE FROM historyArch WHERE `value` IS NULL';
-		DB::Prepare($sql, array());
 		if (config::byKey('historyArchivePackage') < 1) {
 			config::save('historyArchivePackage', 1);
 		}
@@ -336,7 +337,7 @@ class history {
 				try {
 					DB::Prepare($sql, $values, DB::FETCH_TYPE_ROW);
 				} catch (Exception $e) {
-					log::add('history', 'error', __('Erreur l\'archivage des historiques :', __FILE__) . ' ' . json_encode($values) . '  => ' . $e->getMessage());
+					log::add('history', 'error', __('Erreur l\'archivage des historiques :', __FILE__) . ' ' . json_encode($values) . '  => ' . log::exception($e));
 					continue;
 				}
 				$values = array('cmd_id' => $sensors['cmd_id'], 'archiveTime' => $archiveDatetime);

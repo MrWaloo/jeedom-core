@@ -5,18 +5,18 @@ Aqui você pode gerenciar funções **javascript** e regras **CSS** aplicado em 
 
 > **Atenção**
 >
-> O uso de regras CSS inadequadas pode interromper a exibição do seu Jeedom. Funções js usadas incorretamente podem causar danos significativos a vários componentes de sua instalação. Lembre-se de gerar e terceirizar um backup antes de usar essas funções.
+> O uso de regras CSS inadequadas pode interromper a exibição do seu Jeedom. Funções JS não utilizadas corretamente podem causar danos significativos a vários componentes da sua instalação. Lembre-se de gerar e terceirizar um backup antes de usar essas funções.
 
-Esta função usa um modo particular do editor de arquivos Core com dois locais:
+Esta função usa um modo particular do editor de arquivos Core com dois locais :
 
-- desktop / personalizado : Pode conter os dois arquivos **custom.js** e **CSS customizado** que será carregado pelo Core na versão Desktop.
-- móvel / personalizado : Pode conter os dois arquivos **custom.js** e **CSS customizado** que será carregado pelo Core na versão Mobile.
+- desktop / personalizado : Pode conter os dois arquivos **custom.js** E **CSS customizado** que será carregado pelo Core na versão Desktop.
+- móvel / personalizado : Pode conter os dois arquivos **custom.js** E **CSS customizado** que será carregado pelo Core na versão Mobile.
 
-Na barra de menu do editor de arquivos Core, um botão **Habilitado** Onde **Desativado** diz se o Core deve carregá-los ou não. Esta opção também está disponível em **Configurações → Sistema → Configuração** Guia Interface.
+Na barra de menu do editor de arquivos Core, um botão **Habilitado** Ou **Desativado** diz se o Core deve carregá-los ou não. Esta opção também está disponível em **Configurações → Sistema → Configuração** Guia Interface.
 
-> **Observação**
+> **Percebido**
 >
-> Quando esta página é lançada, a estrutura em árvore é criada automaticamente, assim como os 4 arquivos com um comentário na 1ª linha incluindo a versão do Core que os criou.
+> Ao abrir esta página, a árvore é criada automaticamente, assim como os 4 arquivos com um comentário na primeira linha incluindo a versão Core que os criou.
 
 ## Ressources
 
@@ -30,7 +30,7 @@ Na barra de menu do editor de arquivos Core, um botão **Habilitado** Onde **Des
 
 Injetar JS e / ou CSS pode tornar o Jeedom inoperante.
 
-Nesse caso, duas soluções:
+Nesse caso, duas soluções :
 
 - Abra um navegador no modo de recuperação : `IP / index.php?rescue=1`
 - Conecte-se no SSH e exclua os arquivos de personalização : `desktop / custom` e` mobile / custom`
@@ -50,19 +50,19 @@ Todos estes exemplos devem ser colocados no arquivo CSS (não se esqueça de ati
 
 ### Remover largura/altura mínima dos widgets
 
-Isso permite que você tenha widgets menores (largura [largura mínima], altura [altura mínima]), mas tome cuidado, pois isso pode tornar a exibição menos atraente
+Isso permite que você tenha widgets menores (largura [largura mínima], altura [altura mínima]), mas tome cuidado, pois isso pode tornar a exibição menos atraente.
 
 ```
 div.cmd-widget.content,
 div.cmd-widget .content-sm,
 div.cmd-widget .content-lg,
 div.cmd-widget.content-xs {
-  min-width: um conjunto !important;
-  min-height: um conjunto !important;
+  min-width: desarmar !important;
+  min-height: desarmar !important;
 }
 ```
 
-### Adicionada margem entre o nome dos objetos e equipamentos no painel 
+### Adicionadas margens entre os nomes dos objetos e equipamentos no painel 
 
 ```
 .legenda div_object .objectDashLegend {

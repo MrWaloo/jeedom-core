@@ -332,6 +332,24 @@ jeedom.eqLogic.byId = function(_params) {
   domUtils.ajax(paramsAJAX)
 }
 
+jeedom.eqLogic.removeImage = function(_params) {
+  var paramsRequired = ['id'];
+  var paramsSpecifics = {};
+  try {
+    jeedom.private.checkParamsRequired(_params || {}, paramsRequired);
+  } catch (e) {
+    (_params.error || paramsSpecifics.error || jeedom.private.default_params.error)(e);
+    return;
+  }
+  var params = domUtils.extend({}, jeedom.private.default_params, paramsSpecifics, _params || {});
+  var paramsAJAX = jeedom.private.getParamsAJAX(params);
+  paramsAJAX.url = 'core/ajax/eqLogic.ajax.php';
+  paramsAJAX.data = {
+    action: 'removeImage',
+    id: _params.id
+  };
+  domUtils.ajax(paramsAJAX);
+}
 
 jeedom.eqLogic.byLogical = function(_params) {
   var paramsRequired = ['logical', 'type']
@@ -454,6 +472,7 @@ jeedom.eqLogic.refreshValue = function(_params) {
 
     eqLogics[_params[i].eqLogic_id] = {
       eqLogic: eqLogic,
+      type: eqLogic?.classList.contains('battery-widget') ? 'battery' : 'default'
     }
     sends[_params[i].eqLogic_id] = {
       version: ((version = eqLogic?.getAttribute('data-version')) != undefined) ? version : 'dashboard'
@@ -472,6 +491,9 @@ jeedom.eqLogic.refreshValue = function(_params) {
       for (var i in result) {
         tile = domUtils.parseHTML(result[i].html)
         if (tile.childNodes.length == 0) {
+          continue
+        }
+        if (eqLogics[i].type === 'battery') {
           continue
         }
         eqLogic = eqLogics[i].eqLogic

@@ -38,7 +38,7 @@ jobs:
         # secret DOCKER_HUB_REPO is optional (default=jeedom)
         run: |
           export DOCKER_HUB_REPO=${{ secrets.DOCKER_HUB_REPO }}
-          bash .github/scripts/init_workflow.sh
+          bash install/OS_specific/Docker/init_workflow.sh
 
       - name: Set up QEMU
         # https://github.com/marketplace/actions/docker-setup-qemu
@@ -93,7 +93,7 @@ jobs:
           docker rm $(docker ps -aq) 2>&1
           docker rmi $(docker image ls -aq) 2>&1
       
-      - name: Build and push Jeedom on Debian:Bullseye with internal DB
+      - name: Build and push Jeedom on DockerHub
         # https://github.com/marketplace/actions/build-and-push-docker-images
         uses: docker/build-push-action@v3
         continue-on-error: true
@@ -104,11 +104,8 @@ jobs:
           push: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
-          build-args: |
-            "VERSION=${{ env.GITHUB_BRANCH }}"
-            "DEBIAN=bullseye"
-            "DATABASE=1"
-          tags: "${{ env.JEEDOM_REPO }}/jeedom:${{ env.JEEDOM_SHORT_VERSION}}-bullseye"
+          build-args: "VERSION=${{ env.GITHUB_BRANCH }}"
+          tags: "${{ env.JEEDOM_TAGS }}"
           
       - name: Clean docker image
         run: |
@@ -116,7 +113,7 @@ jobs:
           docker rm $(docker ps -aq) 2>&1
           docker rmi $(docker image ls -aq) 2>&1
 
-      - name: Build and push Jeedom on Debian:Buster
+      - name: Build and push Jeedom on Debian:Buster with DB
         # https://github.com/marketplace/actions/build-and-push-docker-images
         uses: docker/build-push-action@v3
         continue-on-error: true
@@ -139,7 +136,7 @@ jobs:
           docker rm $(docker ps -aq) 2>&1
           docker rmi $(docker image ls -aq) 2>&1
       
-      - name: Build and push Jeedom on Debian:Bookworm as latest, 4.4 and 4.4-bookworm
+      - name: Build and push Jeedom on Debian:Bookworm with DB
         # https://github.com/marketplace/actions/build-and-push-docker-images
         uses: docker/build-push-action@v3
         continue-on-error: true
@@ -154,7 +151,7 @@ jobs:
             "VERSION=${{ env.GITHUB_BRANCH }}"
             "DEBIAN=bookworm"
             "DATABASE=1"
-          tags: "${{ env.JEEDOM_REPO }}/jeedom:${{ env.JEEDOM_SHORT_VERSION}}-bookworm,${{ env.JEEDOM_TAGS }}"
+          tags: "${{ env.JEEDOM_REPO }}/jeedom:${{ env.JEEDOM_SHORT_VERSION}}-bookworm"
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}

@@ -325,8 +325,10 @@ $configEqDisplayType = jeedom::getConfiguration('eqLogic:displayType');
                 <label class="col-lg-2 col-md-3 col-sm-4 col-xs-6 control-label">{{Plugin(s)}} <?php echo $key; ?></label>
                 <div class="col-lg-10 col-md-9 col-sm-8 col-xs-6">
                   <?php
-                  foreach ($values as $value) {
-                    echo '<span class="btn btn-xs btn-info">' . $value->getName() . '</span><br/>';
+                  if (is_iterable($values)) {
+                    foreach ($values as $value) {
+                      echo '<span class="btn btn-xs btn-info">' . $value->getName() . '</span><br/>';
+                    }
                   }
                   ?>
                 </div>
@@ -349,7 +351,12 @@ $configEqDisplayType = jeedom::getConfiguration('eqLogic:displayType');
                   <sup><i class="fas fa-question-circle" title="#value# = {{valeur de la commande}}"></i></sup>
                 </label>
                 <div class="col-sm-6">
-                  <input class="cmdAttr form-control" data-l1key="configuration" data-l2key="calculValueOffset" />
+                  <div class="input-group">
+                    <input class="cmdAttr form-control roundedLeft" data-l1key="configuration" data-l2key="calculValueOffset" />
+                    <span class="input-group-btn">
+                      <a class="btn btn-default roundedRight cursor tooltips" id="bt_searchInfoCmdCalculValue" title="{{Rechercher une commande}}"><i class="fas fa-list-alt"></i></a>
+                    </span>
+                  </div>
                 </div>
               </div>
               <?php if ($cmd->getSubType() == 'numeric') { ?>
@@ -358,7 +365,7 @@ $configEqDisplayType = jeedom::getConfiguration('eqLogic:displayType');
                     <sup><i class="fas fa-question-circle" title="{{Nombre de décimales}}"></i></sup>
                   </label>
                   <div class="col-sm-6">
-                    <input class="cmdAttr form-control" data-l1key="configuration" data-l2key="historizeRound" />
+                    <input class="cmdAttr form-control" data-l1key="configuration" data-l2key="historizeRound" type="number" min="0" max="9" step="1" maxlength="1" oninput="this.value = this.value.slice(0, 1)"/>
                   </div>
                 </div>
               <?php }
@@ -513,7 +520,7 @@ $configEqDisplayType = jeedom::getConfiguration('eqLogic:displayType');
               </div>
               <div class="form-group">
                 <label class="col-md-3 col-sm-3 control-label">{{Limiter à une valeur toute les}}
-                <sup><i class="fas fa-question-circle" title="{{Limite le nombre de valeur historisé par la commande en temps réel (avant le lissage de la nuit). Attention un mode de lissage doit absolument être défini.}}"></i></sup>
+                <sup><i class="fas fa-question-circle" title="{{Limiter le nombre de valeurs historisées par la commande en temps réel (avant le lissage de la nuit). Attention un mode de lissage doit absolument être défini.}}"></i></sup>
                 </label>
                 <div class="col-sm-6">
                   <select class="form-control cmdAttr" data-l1key="configuration" data-l2key="history::smooth">
@@ -1486,6 +1493,13 @@ $configEqDisplayType = jeedom::getConfiguration('eqLogic:displayType');
     //cmd configuration tab
     document.getElementById('cmd_configuration')?.addEventListener('click', function(event) {
       var _target = null
+
+      if (_target = event.target.closest('#bt_searchInfoCmdCalculValue')) {
+        jeedom.cmd.getSelectModal({cmd: {type: 'info'}}, function(result) {
+          document.querySelectorAll('.cmdAttr[data-l1key=configuration][data-l2key=calculValueOffset]')[0].insertAtCursor(result.human)
+        })
+      }
+
       if (_target = event.target.closest('.bt_removeAction')) {
         _target.closest('.' + _target.getAttribute('data-type')).remove()
         return
@@ -1556,6 +1570,7 @@ $configEqDisplayType = jeedom::getConfiguration('eqLogic:displayType');
     //cmd display tab
     document.getElementById('cmd_display')?.addEventListener('click', function(event) {
       var _target = null
+
       if (_target = event.target.closest('#bt_addWidgetParametersCmd')) {
         var tr = '<tr>'
         tr += '<td>'

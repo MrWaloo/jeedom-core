@@ -86,11 +86,11 @@ if (!isConnect()) {
 </div>
 
 <div class="alert alert-info mod_actionValue_selDescription message" style="display:none;">
-  {{Permet d'ajouter une message dans le centre de message}}
+  {{Permet d'ajouter un message dans le centre de message}}
 </div>
 
 <div class="alert alert-info mod_actionValue_selDescription equipement">
-  {{Permet de modifier les propriétés visibles/invisibles actives/inactives d'un équipement}}
+  {{Permet de modifier les propriétés d'un équipement (visible/invisible actif/inactif)}}
 </div>
 
 <div class="alert alert-info mod_actionValue_selDescription ask" style="display:none;">
@@ -126,7 +126,7 @@ if (!isConnect()) {
 </div>
 
 <div class="alert alert-info mod_actionValue_selDescription remove_inat" style="display:none;">
-  {{Permet de supprimer la programmation de tous les blocs DANS et A du scénario}}
+  {{Permet de supprimer la programmation de tous les blocs DANS et A d'un scénario}}
 </div>
 
 <div class="alert alert-info mod_actionValue_selDescription event" style="display:none;">
@@ -184,7 +184,7 @@ if (!isConnect()) {
     const select = document.getElementById('mod_actionValue_sel')
     const input = document.getElementById('mod_actionValue_fil')
     const allOptions = Array.from(select.options)
-
+                                                                                      
     function filterOptions() {
       const text = input.value.trim().toLowerCase().stripAccents()
 
@@ -199,7 +199,7 @@ if (!isConnect()) {
           select.add(option.cloneNode(true))
         })
     }
-
-    input.addEventListener('input', filterOptions)
+                                                                                      
+    input.addEventListener('input', filterOptions)                                                                                                                        
   })()
 </script>

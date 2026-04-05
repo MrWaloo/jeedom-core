@@ -122,7 +122,7 @@ class user {
 					->setProfils($profile);
 				$user->save();
 				log::add("connection", "info", __('User created from the LDAP :', __FILE__) . ' ' . $_login);
-				jeedom::event('user_connect');
+				jeedom::event('user_connect', false, array('trigger_value' => $_login));
 				// TODO : if username == password => change ldap password
 				log::add('event', 'info', __('User connection accepted', __FILE__) . ' ' . $_login);
 				return $user;
@@ -145,7 +145,7 @@ class user {
 		if (is_object($user)) {
 			$user->setOptions('lastConnection', date('Y-m-d H:i:s'));
 			$user->save();
-			jeedom::event('user_connect');
+			jeedom::event('user_connect', false, array('trigger_value' => $_login));
 			log::add('event', 'info', __('Local account found for', __FILE__) . ' ' . $_login);
 			log::add('event', 'info', __('User connection accepted', __FILE__) . ' ' . $_login);
 		}
@@ -312,7 +312,7 @@ class user {
 				if(!is_int(intval($datetime))){
 					continue;
 				}
-				if (config::byKey('security::bantime') == -1 || intval($datetime) + intval(config::byKey('security::bantime')) > strtotime('now')) {
+				if (intval(config::byKey('security::bantime')) == -1 || intval($datetime) + intval(config::byKey('security::bantime')) > strtotime('now')) {
 					if ($ip == $current_ip) {
 						jeedom::event('ip_ban', false, ['ip' => $ip, 'datetime' => intval($datetime)]);
                       	return true;
@@ -325,6 +325,7 @@ class user {
 		}
 		return false;
 	}
+
 	public static function getAccessKeyForReport(): string {
 		$user = user::byLogin('internal_report');
 		if (!is_object($user)) {

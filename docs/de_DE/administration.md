@@ -23,7 +23,7 @@ Nachfolgend einige Parameter, die Informationen zentralisieren, die von Plugins 
 
 - Kontakt : Breite, Länge und Höhe Ihres Hauses / Standorts.
 - Adresse : Postanschrift Ihres Hauses / Ihrer Website.
-- Verschiedene : Oberfläche und Anzahl der Bewohner Ihres Hauses / Standorts.
+- Verschiedenes : Oberfläche und Anzahl der Bewohner Ihres Hauses / Standorts.
 
 ## Registerkarte &quot;Schnittstelle&quot;
 
@@ -34,17 +34,17 @@ Auf dieser Registerkarte finden Sie die Parameter für die Anpassung der Anzeige
 - **Heller und dunkler Desktop** : Hier können Sie ein helles und ein dunkles Thema für den Desktop auswählen.
 - **Helles und dunkles Handy** : Gleich wie oben für die Mobile-Version.
 - **Klares Thema von / bis** : Ermöglicht Ihnen, ein Zeitfenster zu definieren, in dem das zuvor ausgewählte Lichtthema verwendet wird. Aktivieren Sie jedoch die Option **Thema basierend auf der Zeit umschalten**.
-- **Helligkeitssensor**   : Nur mobile Schnittstelle, muss aktiviert werden *generischer zusätzlicher Sensor* in Chrom, Chrom Seite://flags.
+- **Helligkeitssensor** : Nur mobile Schnittstelle, muss aktiviert werden *generischer zusätzlicher Sensor* in Chrom, Chrom Seite://flags.
 
 ### Tuiles
 
 - **Nicht horizontal** : Beschränkt die Breite der Kacheln alle x Pixel.
 - **Nicht vertikal** : Beschränkt die Höhe der Kacheln alle x Pixel.
-- **Rand** : Vertikaler und horizontaler Abstand zwischen Kacheln in Pixel.
+- **Marge** : Vertikaler und horizontaler Abstand zwischen Kacheln in Pixel.
 - **Vertikale Zentrierung von Fliesen** : Zentriert den Inhalt der Kacheln vertikal.
 - **Bunte Widget-Symbole** : Einfärben von Widget-Symbolen basierend auf ihrem Status. Veränderbar durch Szenario, *setColoredIcon* ('Symbolfärbung').
 - **Farbige Kategorien** : Einfärbung des Titels der Kacheln nach Kategorie.
-- **Handy, Mobiltelefon : eine Standardspalte** : Anzeige von Kacheln in voller Breite auf Mobilgeräten
+- **Mobile : eine Standardspalte** : Anzeige von Kacheln in voller Breite auf Mobilgeräten
 
 
 ### Hintergrundbilder
@@ -65,9 +65,9 @@ Auf dieser Registerkarte finden Sie die Parameter für die Anpassung der Anzeige
 
 ### Personnalisation
 
-- **Ermöglichen** : Aktivieren Sie die Verwendung der folgenden Optionen.
+- **Aktivieren** : Aktivieren Sie die Verwendung der folgenden Optionen.
 - **Transparenz** : Zeigt Dashboard-Kacheln und einige Inhalte transparent an. 1 : völlig undurchsichtig, 0 : total transparent.
-- **Runden** : Zeigt Schnittstellenelemente mit abgerundeten Winkeln an. 0 : keine Rundung, 1 : maximale Rundung.
+- **Gerundet** : Zeigt Schnittstellenelemente mit abgerundeten Winkeln an. 0 : keine Rundung, 1 : maximale Rundung.
 - **Schatten deaktivieren** : Deaktiviert Schatten von Kacheln im Dashboard, in Menüs und bestimmten Oberflächenelementen.
 
 
@@ -100,14 +100,14 @@ Es ist unbedingt erforderlich, diesen wichtigen Teil von Jeedom korrekt zu konfi
     - Aktivieren Sie das Kontrollkästchen Proxy aktivieren.
     - **Proxy-Adresse** : Geben Sie die Proxy-Adresse ein,
     - **Proxy-Port** : Geben Sie den Proxy-Port ein,
-    - **Anmeldung** : Geben Sie den Proxy-Login ein,
+    - **Login** : Geben Sie den Proxy-Login ein,
     - **Passwort** : Geben Sie das Passwort ein.
 
-> **Tipp**
+> **Beratung**
 >
 > Wenn Sie sich in HTTPS befinden, ist der Port 443 (Standard) und in HTTP ist der Port 80 (Standard)). Um HTTPS von außen nutzen zu können, ist jetzt ein Letsencrypt-Plugin auf dem Markt erhältlich.
 
-> **Tipp**
+> **Beratung**
 >
 > Um herauszufinden, ob Sie einen Wert im Feld festlegen müssen **Ergänzen**, Schauen Sie, wenn Sie sich in Ihrem Internetbrowser bei Jeedom anmelden, ob Sie / Jeedom (oder was auch immer) nach der IP hinzufügen müssen.
 
@@ -139,16 +139,16 @@ Es ist unbedingt erforderlich, diesen wichtigen Teil von Jeedom korrekt zu konfi
 
 ### Alertes
 
-- **Fügen Sie jedem Timeout eine Nachricht hinzu** : Fügen Sie eine Nachricht im Nachrichtencenter hinzu, wenn ein Gerät hineinfällt **Auszeit**.
-- **Timeout-Reihenfolge** : Befehl eingeben **Botschaft** zu verwenden, wenn sich ein Gerät in befindet **Auszeit**.
+- **Fügen Sie jedem Timeout eine Nachricht hinzu** : Fügen Sie eine Nachricht im Nachrichtencenter hinzu, wenn ein Gerät hineinfällt **Time-out**.
+- **Timeout-Reihenfolge** : Befehl eingeben **Nachricht** zu verwenden, wenn sich ein Gerät in befindet **Time-out**.
 - **Fügen Sie jeder Batterie in Warnung eine Nachricht hinzu** : Fügen Sie im Nachrichtencenter eine Nachricht hinzu, wenn der Akkuladestand eines Geräts eingelegt ist **Warnung**.
-- **Batteriebefehl in Warnung** : Befehl eingeben **Botschaft** zu verwenden, wenn sich das Gerät auf Batteriestand befindet **Warnung**.
-- **Fügen Sie jeder gefährdeten Batterie eine Nachricht hinzu** : Fügen Sie im Nachrichtencenter eine Nachricht hinzu, wenn der Akkuladestand eines Geräts eingelegt ist **Achtung**.
-- **Befehl zur Batterie in Gefahr** : Befehl eingeben **Botschaft** zu verwenden, wenn sich das Gerät auf Batteriestand befindet **Achtung**.
+- **Batteriebefehl in Warnung** : Befehl eingeben **Nachricht** zu verwenden, wenn sich das Gerät auf Batteriestand befindet **Warnung**.
+- **Fügen Sie jeder gefährdeten Batterie eine Nachricht hinzu** : Fügen Sie im Nachrichtencenter eine Nachricht hinzu, wenn der Akkuladestand eines Geräts eingelegt ist **Gefahr**.
+- **Befehl zur Batterie in Gefahr** : Befehl eingeben **Nachricht** zu verwenden, wenn sich das Gerät auf Batteriestand befindet **Gefahr**.
 - **Fügen Sie jeder Warnung eine Nachricht hinzu** : Fügen Sie eine Nachricht im Nachrichtencenter hinzu, wenn eine Bestellung alarmiert wird **Warnung**.
-- **Befehl zur Warnung** : Befehl eingeben **Botschaft** zu verwenden, wenn eine Bestellung in Alarmbereitschaft geht **Warnung**.
-- **Fügen Sie jeder Gefahr eine Nachricht hinzu** : Fügen Sie eine Nachricht im Nachrichtencenter hinzu, wenn eine Bestellung alarmiert wird **Achtung**.
-- **Befehl zur Gefahr** : Befehl eingeben **Botschaft** zu verwenden, wenn eine Bestellung in Alarmbereitschaft geht **Achtung**.
+- **Befehl zur Warnung** : Befehl eingeben **Nachricht** zu verwenden, wenn eine Bestellung in Alarmbereitschaft geht **Warnung**.
+- **Fügen Sie jeder Gefahr eine Nachricht hinzu** : Fügen Sie eine Nachricht im Nachrichtencenter hinzu, wenn eine Bestellung alarmiert wird **Gefahr**.
+- **Befehl zur Gefahr** : Befehl eingeben **Nachricht** zu verwenden, wenn eine Bestellung in Alarmbereitschaft geht **Gefahr**.
 
 ### Logs
 
@@ -174,7 +174,7 @@ Viele Bestellungen können protokolliert werden. So erhalten Sie unter Analyse �
 
 >**InfluxDB**
 >
->Wenn Sie InfluxDB im Moment verwenden möchten, müssen Sie die InfluxDB-Bibliothek selbst installieren. Jeedom tut dies nicht mehr, da sie nicht mehr gepflegt wird (wir planen eine Migration auf die neue Version, dies wird jedoch nicht sofort geschehen)). Hier erfahren Sie, wie Sie die Installation manuell durchführen : „cd /var/www/html;composer require influxdb/influxdb-php“ aus der Konfiguration, dann auf der Registerkarte „OS/DB“ und dann in der Betriebssystem-Verwaltungskonsole
+>Wenn Sie InfluxDB im Moment verwenden möchten, müssen Sie die InfluxDB-Bibliothek selbst installieren. Jeedom tut dies nicht mehr, da sie nicht mehr gepflegt wird (wir planen eine Migration auf die neue Version, aber das wird nicht sofort passieren)). Um die manuelle Installation durchzuführen, erfahren Sie hier, wie Sie vorgehen : „cd /var/www/html;composer require influxdb/influxdb-php“ aus der Konfiguration, dann auf der Registerkarte „OS/DB“ und dann in der Betriebssystem-Verwaltungskonsole
 
 ### Bestellhistorie
 
@@ -190,7 +190,7 @@ Viele Bestellungen können protokolliert werden. So erhalten Sie unter Analyse �
 > **Notiz**
 >
 > Der erste Parameter **Zeige Statistiken über Widgets** ist möglich, aber standardmäßig deaktiviert, da dadurch die Anzeigezeit des Dashboards erheblich verlängert wird. Wenn Sie diese Option aktivieren, stützt sich Jeedom standardmäßig auf Daten der letzten 24 Stunden, um diese Statistiken zu berechnen.
-> Die Trendberechnungsmethode basiert auf der Berechnung der kleinsten Quadrate (siehe [hier](https://fr.wikipedia.org/wiki/M%C3%A9thode_des_moindres_carr%C3%A9s) für das Detail).
+> Die Trendberechnungsmethode basiert auf der Berechnung der kleinsten Quadrate (siehe [Hier](https://fr.wikipedia.org/wiki/M%C3%A9thode_des_moindres_carr%C3%A9s) für das Detail).
 
 ### Push
 
@@ -217,13 +217,13 @@ Linkgrafiken konfigurieren. Über diese Links können Sie in Form eines Diagramm
 - **Tiefe für Befehle** : Gleiches gilt für Bestellungen.
 - **Tiefe für Variablen** : Gleiches gilt für Variablen.
 - **Parameter Prerender** : Ermöglicht es Ihnen, auf das Layout des Diagramms zu reagieren.
-- **Parameter machen** : Dasselbe.
+- **Parameter machen** : Idem.
 
 ## Registerkarte &quot;Interaktionen&quot;
 
 Auf dieser Registerkarte können Sie globale Parameter für die Interaktionen festlegen, die Sie unter Extras → Interaktionen finden.
 
-> **Tipp**
+> **Beratung**
 >
 > Um das Interaktionsprotokoll zu aktivieren, gehen Sie zur Registerkarte Einstellungen → System → Konfiguration : Protokolle, dann überprüfen **Debuggen** in der unteren Liste. Aufmerksamkeit : Die Protokolle sind dann sehr ausführlich !
 
@@ -241,20 +241,20 @@ Hier haben Sie drei Parameter :
 
 ### Automatische Interaktion, kontextuelle & Warnung
 
--   Das **automatische Interaktionen** Erlaube Jeedom, zu versuchen, eine Interaktionsanforderung zu verstehen, auch wenn keine definiert ist. Er wird dann nach einem Objektnamen und / oder einer Ausrüstung suchen und / oder versuchen, so gut wie möglich zu reagieren.
+-   DER **automatische Interaktionen** Erlaube Jeedom, zu versuchen, eine Interaktionsanforderung zu verstehen, auch wenn keine definiert ist. Er wird dann nach einem Objektnamen und / oder einer Ausrüstung suchen und / oder versuchen, so gut wie möglich zu reagieren.
 
--   Das **kontextuelle Interaktionen** Sie können beispielsweise mehrere Anforderungen verketten, ohne alles zu wiederholen :
+-   DER **kontextuelle Interaktionen** Sie können beispielsweise mehrere Anforderungen verketten, ohne alles zu wiederholen :
     - *Jeedom hält den Kontext :*
-        - *Du* : Wie viel ist er im Raum ?
+        - *DU* : Wie viel ist er im Raum ?
         - *Jeedom* : Temperatur 25.2 ° C.
-        - *Du* : und im Wohnzimmer ?
+        - *DU* : und im Wohnzimmer ?
         - *Jeedom* : Temperatur 27.2 ° C.
     - *Stellen Sie zwei Fragen in einer :*
-        - *Du* : Wie ist es im Schlafzimmer und im Wohnzimmer? ?
+        - *DU* : Wie ist es im Schlafzimmer und im Wohnzimmer? ?
         - *Jeedom* : Temperatur 23.6 ° C, Temperatur 27.2 ° C.
 -   Typ Interaktionen **Lassen Sie uns wissen** Erlauben Sie Jeedom, Sie zu warnen, wenn eine Bestellung einen bestimmten Wert überschreitet / fällt oder wert ist.
-    - *Du* : Benachrichtigen Sie mich, wenn die Wohnzimmertemperatur 25 ° C überschreitet ?
-    - *Jeedom* : OK (*Sobald die Wohnzimmertemperatur 25 ° C überschreitet, wird Jeedom es Ihnen einmal mitteilen*)
+    - *DU* : Benachrichtigen Sie mich, wenn die Wohnzimmertemperatur 25 ° C überschreitet ?
+    - *Jeedom* : Okay (*Sobald die Wohnzimmertemperatur 25 ° C überschreitet, wird Jeedom es Ihnen einmal mitteilen*)
 
 > **Notiz**
 >
@@ -308,7 +308,7 @@ Die Liste der gesperrten IPs befindet sich am Ende dieser Seite. Sie finden die 
 
 - **Quelle aktualisieren** : Wählen Sie Jeedom Core Update Source.
 - **Kern Version** : Kernversion zum Wiederherstellen.
-- **Automatisch nach Updates suchen** : Geben Sie an, ob automatisch überprüft werden soll, ob neue Updates vorhanden sind (achten Sie darauf, dass der Markt nicht überlastet wird. Die Überprüfungszeit kann sich ändern).
+- **Automatisch nach Updates suchen** : Gibt an, ob automatisch nach neuen Updates gesucht werden soll (achten Sie darauf, den Markt nicht zu überlasten, da sich die Prüfzeit ändern kann)).
 
 ### Einlagen
 
@@ -322,7 +322,7 @@ Einzahlung verwendet, um das Senden von Plugins durch Dateien zu aktivieren.
 
 Kaution verwendet, um Jeedom mit Github zu verbinden.
 
-- **Zeichen** : Token für den Zugang zur privaten Kaution.
+- **Token** : Token für den Zugang zur privaten Kaution.
 - **Jeedom Core Repository Benutzer oder Organisation** : Benutzer- oder Organisationsname auf Github für den Kern.
 - **Repository-Name für den Jeedom-Kern** : Repository-Name für den Kern.
 - **Jeedom Kernindustrie** : Kern-Repository-Zweig.
@@ -363,7 +363,7 @@ Einzahlung, die es ermöglicht, automatisch ein Backup von Jeedom auf einer Samb
 
 > **Wichtig**
 >
-> Das Samba-Protokoll hat mehrere Versionen, die Version 1 ist in Bezug auf die Sicherheit gefährdet und auf einigen NAS können Sie den Client zwingen, die Verbindung mit Version 2 oder Version 3 herzustellen. Also, wenn Sie einen Fehler haben *Protokollaushandlung fehlgeschlagen: NT_STATUS_INVAID_NETWORK_RESPONSE* Es besteht eine gute Chance, dass auf der NAS-Seite die Einschränkung besteht. Sie müssen dann die Datei / etc / samba / smb auf Ihrem Jeedom-Betriebssystem ändern.conf und füge diese beiden Zeilen hinzu :
+> Das Samba-Protokoll hat mehrere Versionen, die Sicherheitsstufe von V1 ist gefährdet und auf einigen NAS können Sie den Client zwingen, für die Verbindung v2 oder v3 zu verwenden. Also, wenn Sie einen Fehler haben *Protokollaushandlung fehlgeschlagen: NT_STATUS_INVAID_NETWORK_RESPONSE* Es besteht eine gute Chance, dass auf der NAS-Seite die Einschränkung besteht. Sie müssen dann die Datei / etc / samba / smb auf Ihrem Jeedom-Betriebssystem ändern.conf und füge diese beiden Zeilen hinzu :
 > Client-Max-Protokoll = SMB3
 > Client-Min-Protokoll = SMB2
 > Der Jeedom-Seite smbclient verwendet dann v2, wobei v3 und indem SMB3 auf beide nur SMB3 gesetzt wird. Es liegt also an Ihnen, sich an die Einschränkungen des NAS oder eines anderen Samba-Servers anzupassen
@@ -385,11 +385,11 @@ Ermöglicht die Überwachung und Bearbeitung des Jeedom-Cache :
   - Dateisystem : Speicherung der Cache-Informationen /tmp/jeedom/cache (im RAM) im Dateimodus, verwendet eine Drittanbieter-Bibliothek. Es wird bald durch File (Beta) ersetzt)
   - Datei (Beta) : Speicherung der Cache-Informationen /tmp/jeedom/cache (im RAM) im Dateimodus. Am effizientesten, aber alle 30 Minuten gespart
   - MySQL (Beta)) : Verwendung einer einfachen Cache-Tabelle. Am wenigsten effizient, aber in Echtzeit gespeichert (kein Datenverlust möglich))
-  - Redis (Beta) : Reserviert für Experten, verlässt sich auf Redis, um den Cache zu verwalten (erfordert die Installation von Redis selbst und der PHP-Redis-Abhängigkeiten))
+  - Redis (Beta) : Reserviert für Experten, verlässt sich auf Redis, um den Cache zu verwalten (daher müssen Sie Redis- und PHP-Redis-Abhängigkeiten selbst installieren))
 - **Cache Reinigung** : Erzwingen Sie das Löschen von Objekten, die nicht mehr nützlich sind. Jeedom macht das automatisch jede Nacht.
 - **Alle Daten aus dem Cache entfernen** : Leeren Sie den Deckel vollständig.
     Bitte beachten Sie, dass dies zu Datenverlust führen kann !
-- **Pausenzeit für das lange Polling** : Häufigkeit, mit der Jeedom prüft, ob Ereignisse für Kunden ausstehen (Weboberfläche, mobile Anwendung usw.)). Je kürzer diese Zeit ist, desto schneller wird die Schnittstelle aktualisiert. Im Gegenzug verbraucht sie mehr Ressourcen und kann daher Jeedom verlangsamen.
+- **Pausenzeit für das lange Polling** : Häufigkeit, mit der Jeedom prüft, ob für Clients ausstehende Ereignisse vorliegen (Webschnittstelle, mobile Anwendung usw.)). Je kürzer diese Zeit ist, desto schneller wird die Schnittstelle aktualisiert, im Gegenzug verbraucht dies mehr Ressourcen und kann daher Jeedom verlangsamen.
 
 >**Wichtig**
 >

@@ -252,7 +252,7 @@ if (!jeeFrontEnd.scenario) {
         var scId = document.querySelector('div#div_editScenario span[data-l1key="id"]').textContent
         var cmdId = document.querySelector('div#cmd_information span[data-l1key="id"]')?.textContent
 
-        var cmdName = jeephp2js.md_cmdConfigure_cmdInfo.eqLogicHumanName + ' [' + jeephp2js.md_cmdConfigure_cmdInfo.name + ']'
+        var cmdName = jeephp2js.md_cmdConfigure_cmdInfo.eqLogicHumanName + '[' + jeephp2js.md_cmdConfigure_cmdInfo.name + ']'
 
         //clean actual cmd from list:
         jeeP.dataDefinedAction = jeeP.dataDefinedAction.filter(i => i['cmdId'] != cmdId)
@@ -327,7 +327,7 @@ if (!jeeFrontEnd.scenario) {
       document.getElementById('scenarioThumbnailDisplay').unseen()
       document.getElementById('emptyModeWarning').unseen()
       jeedom.scenario.update[_id] = function(_options) {
-        if (_options.scenario_id = !jeeP.dom_divScenario.getJeeValues('.scenarioAttr')[0]['id']) {
+        if (_options.scenario_id != undefined && _options.scenario_id != jeeP.dom_divScenario.getJeeValues('.scenarioAttr')[0]['id']) {
           return
         }
         switch (_options.state) {
@@ -1226,6 +1226,8 @@ if (!jeeFrontEnd.scenario) {
         message += '    <option value=">">{{supérieur}}</option>'
         message += '    <option value="<">{{inférieur}}</option>'
         message += '    <option value="!=">{{différent}}</option>'
+        message += '    <option value=">=">{{supérieur ou égal}}</option>'
+        message += '    <option value="<=">{{inférieur ou égal}}</option>'
         message += '  </select>'
         message += '</div>'
         message += '<div class="col-xs-4">'
@@ -1238,7 +1240,7 @@ if (!jeeFrontEnd.scenario) {
       if (subType == 'string') {
         message += '<div class="col-xs-2">'
         message += '  <select class="conditionAttr form-control" data-l1key="operator">'
-        message += '    <option value="==">{{égale}}</option>'
+        message += '    <option value="==">{{égal}}</option>'
         message += '    <option value="matches">{{contient}}</option>'
         message += '    <option value="!=">{{différent}}</option>'
         message += '  </select>'
@@ -1997,8 +1999,11 @@ document.getElementById('div_editScenario').querySelector('div.floatingbar').add
       _target.setAttribute('data-state', '1')
       //open code blocks for later search:
       document.querySelectorAll('#div_scenarioElement div.elementCODE.elementCollapse').forEach(_code => {
-        _code.removeClass('elementCollapse')
-        _code.querySelector('textarea[data-l1key="expression"]').show()
+          _code.classList.remove('elementCollapse');
+          const textarea = _code.querySelector('textarea[data-l1key="expression"]');
+          if (textarea) {
+            textarea.style.display = 'block';
+          }
       })
       jeeP.setEditors()
       document.querySelectorAll('textarea[data-l1key="expression"]').unseen()
