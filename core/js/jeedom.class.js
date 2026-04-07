@@ -756,6 +756,7 @@ jeedom.getDocumentationUrl = function(_params) {
     plugin: params.plugin || null,
     page: params.page || null,
     theme: params.theme || null,
+    remoteVersion: params.remoteVersion || null,
   }
   domUtils.ajax(paramsAJAX)
 }

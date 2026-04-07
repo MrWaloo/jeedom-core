@@ -561,6 +561,24 @@ if (!jeeFrontEnd.update) {
               check_backupBefore.removeAttribute('disabled')
             }
           })
+
+          contentEl.querySelector('#bt_changelogCore').addEventListener('click', function(event) {
+            jeedom.getDocumentationUrl({
+              page: 'changelog',
+              theme: document.body.getAttribute('data-theme'),
+              remoteVersion: document.querySelector('tr[data-logicalid="jeedom"] [data-l1key="remoteVersion"]').textContent,
+              error: function(error) {
+                jeedomUtils.showAlert({
+                  attachTo: jeeDialog.get('#md_specifyUpdate', 'dialog'),
+                  message: error.message,
+                  level: 'danger'
+                })
+              },
+              success: function(url) {
+                window.open(url, '_blank')
+              }
+            })
+          })
         },
         onShown: function() {
           jeeDialog.get('#md_update', 'content').querySelector('#md_specifyUpdate').removeClass('hidden')

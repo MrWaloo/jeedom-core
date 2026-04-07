@@ -38,7 +38,6 @@ if (strpos($logUpdate, 'END UPDATE') || count(system::ps('install/update.php', '
 } else {
 	sendVarToJS('jeephp2js.isUpdating', '1');
 }
-$changelog_url = config::byKey('doc::base_url', 'core') . '/' . config::byKey('language', 'core', 'fr_FR') . '/core/' . substr(jeedom::version(), 0, 3) . '/changelog';
 ?>
 
 <div class="row row-overflow">
@@ -129,7 +128,7 @@ $changelog_url = config::byKey('doc::base_url', 'core') . '/' . config::byKey('l
 				<fieldset>
 					<div class="alert alert-warning">
 						{{Avant toute mise à jour, merci de consulter le}}
-						<a class="btn btn-xs" target="_blank" href="<?= $changelog_url ?>"><i class="fas fa-book"></i>
+						<a class="btn btn-xs" id="bt_changelogCore" target="_blank"><i class="fas fa-book"></i>
 							{{Changelog}}
 						</a>
 						{{du Core}}.
