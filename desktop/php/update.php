@@ -38,6 +38,7 @@ if (strpos($logUpdate, 'END UPDATE') || count(system::ps('install/update.php', '
 } else {
 	sendVarToJS('jeephp2js.isUpdating', '1');
 }
+$changelog_url = config::byKey('doc::base_url', 'core') . '/' . config::byKey('language', 'core', 'fr_FR') . '/core/' . substr(jeedom::version(), 0, 3) . '/changelog';
 ?>
 
 <div class="row row-overflow">
@@ -49,7 +50,7 @@ if (strpos($logUpdate, 'END UPDATE') || count(system::ps('install/update.php', '
 				<a class="btn btn-info btn-sm roundedLeft" id="bt_checkAllUpdate"><i class="fas fa-sync"></i> {{Vérifier les mises à jour}}
 				</a><a class="btn btn-success btn-sm" id="bt_saveUpdate"><i class="fas fa-check-circle"></i> {{Sauvegarder}}
 				</a><?php if ($showUpdate == true) { ?><a href="#" class="btn btn-sm btn-warning roundedRight updateJeedom"><i class="fas fa-check"></i> {{Mettre à jour}}
-					</a><?php } ?>
+				</a><?php } ?>
 			</span>
 		</div>
 		<br /><br />
@@ -127,7 +128,11 @@ if (strpos($logUpdate, 'END UPDATE') || count(system::ps('install/update.php', '
 			<form class="form-horizontal">
 				<fieldset>
 					<div class="alert alert-warning">
-						{{Avant toute mise à jour, merci de consulter le}} <span class="bt_changelogCore label cursor alert-info">{{changelog}}</span> {{du Core}}.
+						{{Avant toute mise à jour, merci de consulter le}}
+						<a class="btn btn-xs" target="_blank" href="<?= $changelog_url ?>"><i class="fas fa-book"></i>
+							{{Changelog}}
+						</a>
+						{{du Core}}.
 					</div>
 					<?php if (config::byKey('core::branch') == 'beta' || config::byKey('core::branch') == 'alpha') { ?>
 						<div class="alert alert-danger">
